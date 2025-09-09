@@ -4,6 +4,8 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Optional
 import warnings
 warnings.filterwarnings('ignore')
+import os
+import json
 
 # ML Libraries
 from sklearn.model_selection import train_test_split
@@ -17,6 +19,15 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
 import uvicorn
+import yaml
+from dateutil import parser as dateutil_parser
+
+# Optional OR-Tools import (for induction optimizer). We handle absence gracefully.
+try:
+    from ortools.sat.python import cp_model  # type: ignore
+    ORTOOLS_AVAILABLE = True
+except Exception:
+    ORTOOLS_AVAILABLE = False
 
 
 class DemandForecaster:
@@ -504,7 +515,9 @@ async def startup_event():
     """Load models on startup"""
     try:
         # Try to load existing models
-        forecaster.load_models()
+        # Load models from a path relative to this file so CWD doesn't matter
+        model_dir = os.path.join(os.path.dirname(__file__), "models")
+        forecaster.load_models(model_dir=model_dir)
         print("✅ Models loaded successfully")
     except:
         print("⚠️  No pre-trained models found. Train models first using /train endpoint")
@@ -526,18 +539,20 @@ async def forecast_demand(request: ForecastRequest):
 async def train_models():
     """Train forecasting models (use this endpoint to train with your datasets)"""
     try:
-        # Load datasets (modify paths as needed)
+        # Load datasets using absolute paths based on this file's directory
+        data_dir = os.path.dirname(__file__)
         forecaster.load_datasets(
-            ridership_path="ridership_history.csv",
-            events_path="events_calendar.csv",
-            weather_path="weather.csv"
+            ridership_path=os.path.join(data_dir, "ridership_history.csv"),
+            events_path=os.path.join(data_dir, "events_calendar.csv"),
+            weather_path=os.path.join(data_dir, "weather.csv"),
         )
         
         # Train models
         forecaster.train_models()
         
-        # Save models
-        forecaster.save_models()
+        # Save models to a directory relative to this file
+        model_dir = os.path.join(os.path.dirname(__file__), "models")
+        forecaster.save_models(model_dir=model_dir)
         
         return {"message": "Models trained and saved successfully"}
     except Exception as e:
@@ -553,6 +568,283 @@ async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "models_loaded": len(forecaster.models) > 0}
 
+
+# =============================
+# Induction Optimizer (New)
+# =============================
+
+class InductionRequest(BaseModel):
+    max_run: Optional[int] = None
+    max_standby: Optional[int] = None
+    max_maintenance: Optional[int] = None
+
+
+class TrainDecision(BaseModel):
+    train_id: str
+    decision: str  # "run" | "standby" | "maintenance"
+    score: float
+    reasons: List[str]
+
+
+class InductionResponse(BaseModel):
+    results: List[TrainDecision]
+
+
+def read_csv_or_empty(path: str, required_columns: Optional[List[str]] = None) -> pd.DataFrame:
+    if not os.path.exists(path):
+        return pd.DataFrame(columns=required_columns or [])
+    df = pd.read_csv(path)
+    if required_columns:
+        for col in required_columns:
+            if col not in df.columns:
+                df[col] = pd.Series(dtype="object")
+    return df
+
+
+def load_datasets(data_dir: str):
+    fitness = read_csv_or_empty(
+        os.path.join(data_dir, "fitness_certificates.csv"),
+        ["train_id", "component", "expiry_date", "is_valid"],
+    )
+    job_cards = read_csv_or_empty(
+        os.path.join(data_dir, "job_cards.csv"),
+        ["train_id", "priority", "status"],
+    )
+    branding = read_csv_or_empty(
+        os.path.join(data_dir, "branding_contracts.csv"),
+        ["train_id", "exposure_hours", "sla_priority"],
+    )
+    mileage = read_csv_or_empty(
+        os.path.join(data_dir, "mileage_logs.csv"),
+        ["train_id", "daily_km"],
+    )
+    cleaning = read_csv_or_empty(
+        os.path.join(data_dir, "cleaning_slots.csv"),
+        ["date", "crew_available", "max_trains"],
+    )
+    stabling = read_csv_or_empty(
+        os.path.join(data_dir, "stabling_state.csv"),
+        ["train_id", "bay", "status"],
+    )
+
+    return fitness, job_cards, branding, mileage, cleaning, stabling
+
+
+def derive_train_set(
+    fitness: pd.DataFrame,
+    job_cards: pd.DataFrame,
+    branding: pd.DataFrame,
+    mileage: pd.DataFrame,
+    stabling: pd.DataFrame,
+) -> List[str]:
+    trains = set()
+    for df in [fitness, job_cards, branding, mileage, stabling]:
+        if not df.empty and "train_id" in df.columns:
+            trains.update(df["train_id"].dropna().astype(str).tolist())
+    return sorted(trains)
+
+
+def compute_scores(
+    train_ids: List[str],
+    fitness: pd.DataFrame,
+    job_cards: pd.DataFrame,
+    branding: pd.DataFrame,
+    mileage: pd.DataFrame,
+) -> dict:
+    scores = {t: 0.0 for t in train_ids}
+    reasons = {t: [] for t in train_ids}
+
+    # Fitness: invalid => heavy penalty; valid => small bonus
+    if not fitness.empty:
+        fitness_valid = (
+            fitness.groupby("train_id")["is_valid"].apply(lambda s: bool(all(s.fillna(True))))
+            if "is_valid" in fitness.columns
+            else pd.Series({})
+        )
+        for t in train_ids:
+            valid = bool(fitness_valid.get(t, True))
+            if valid:
+                scores[t] += 5.0
+                reasons[t].append("Fitness valid")
+            else:
+                scores[t] -= 100.0
+                reasons[t].append("Fitness expired")
+
+    # Job cards: open high-priority => maintenance leaning
+    if not job_cards.empty:
+        if "status" in job_cards.columns and "priority" in job_cards.columns:
+            open_high = job_cards[
+                job_cards["status"].astype(str).str.lower().eq("open")
+                & job_cards["priority"].astype(str).str.lower().isin(["high", "urgent"])
+            ]
+            has_open_high = open_high.groupby("train_id").size()
+            for t in train_ids:
+                if int(has_open_high.get(t, 0)) > 0:
+                    scores[t] -= 20.0
+                    reasons[t].append("Open high-priority job cards")
+
+    # Branding exposure: higher exposure => prefer to run
+    if not branding.empty:
+        if "exposure_hours" in branding.columns:
+            bh = branding.groupby("train_id")["exposure_hours"].sum()
+            if not bh.empty:
+                max_exp = max(1.0, float(bh.max()))
+                for t in train_ids:
+                    exp = float(bh.get(t, 0.0))
+                    bonus = 10.0 * (exp / max_exp)
+                    scores[t] += bonus
+                    if exp > 0:
+                        reasons[t].append(f"Branding exposure bonus {bonus:.1f}")
+
+    # Mileage balancing: very high recent mileage => lean standby/maintenance
+    if not mileage.empty:
+        if "daily_km" in mileage.columns:
+            mk = mileage.groupby("train_id")["daily_km"].sum()
+            if not mk.empty:
+                max_km = max(1.0, float(mk.max()))
+                for t in train_ids:
+                    km = float(mk.get(t, 0.0))
+                    fatigue = 5.0 * (km / max_km)
+                    scores[t] -= fatigue
+                    if km > 0:
+                        reasons[t].append(f"Mileage fatigue -{fatigue:.1f}")
+
+    return scores, reasons
+
+
+def solve_decisions(train_ids: List[str], scores: dict, reasons: dict, req: InductionRequest) -> List[TrainDecision]:
+    # Heuristic fallback when OR-Tools not present
+    if not ORTOOLS_AVAILABLE:
+        ranked = sorted(train_ids, key=lambda t: scores[t], reverse=True)
+        results: List[TrainDecision] = []
+        for idx, t in enumerate(ranked):
+            decision = "run" if idx < max(1, len(ranked) // 2) else "standby"
+            if scores[t] < -50:
+                decision = "maintenance"
+            results.append(TrainDecision(train_id=t, decision=decision, score=float(scores[t]), reasons=reasons[t]))
+        return results
+
+    model = cp_model.CpModel()
+
+    x_run = {}
+    x_standby = {}
+    x_maint = {}
+    for t in train_ids:
+        x_run[t] = model.NewBoolVar(f"run_{t}")
+        x_standby[t] = model.NewBoolVar(f"standby_{t}")
+        x_maint[t] = model.NewBoolVar(f"maint_{t}")
+        model.Add(x_run[t] + x_standby[t] + x_maint[t] == 1)
+
+    if req.max_run is not None:
+        model.Add(sum(x_run[t] for t in train_ids) <= req.max_run)
+    if req.max_standby is not None:
+        model.Add(sum(x_standby[t] for t in train_ids) <= req.max_standby)
+    if req.max_maintenance is not None:
+        model.Add(sum(x_maint[t] for t in train_ids) <= req.max_maintenance)
+
+    objective_terms = []
+    for t in train_ids:
+        s = int(round(scores[t] * 100))
+        objective_terms.append(s * x_run[t])
+        objective_terms.append(int(0.3 * s) * x_standby[t])
+        objective_terms.append(int(-0.2 * s) * x_maint[t])
+    model.Maximize(sum(objective_terms))
+
+    solver = cp_model.CpSolver()
+    try:
+        if hasattr(solver, 'parameters') and hasattr(solver.parameters, 'num_search_workers'):
+            solver.parameters.num_search_workers = 4
+    except Exception:
+        pass
+    solver.parameters.max_time_in_seconds = 5.0
+    status = solver.Solve(model)
+
+    if status not in (cp_model.OPTIMAL, cp_model.FEASIBLE):
+        ranked = sorted(train_ids, key=lambda t: scores[t], reverse=True)
+        results: List[TrainDecision] = []
+        for idx, t in enumerate(ranked):
+            decision = "run" if idx < max(1, len(ranked) // 2) else "standby"
+            if scores[t] < -50:
+                decision = "maintenance"
+            results.append(TrainDecision(train_id=t, decision=decision, score=float(scores[t]), reasons=reasons[t]))
+        return results
+
+    results: List[TrainDecision] = []
+    for t in train_ids:
+        vals = {
+            "run": solver.Value(x_run[t]),
+            "standby": solver.Value(x_standby[t]),
+            "maintenance": solver.Value(x_maint[t]),
+        }
+        decision = max(vals, key=vals.get)
+        results.append(TrainDecision(train_id=t, decision=decision, score=float(scores[t]), reasons=reasons[t]))
+
+    priority = {"run": 0, "standby": 1, "maintenance": 2}
+    results.sort(key=lambda r: (priority.get(r.decision, 3), -r.score, r.train_id))
+    return results
+
+
+@app.post("/induction/run", response_model=InductionResponse)
+def run_induction(req: InductionRequest):
+    data_dir = os.environ.get(
+        "INDUCTION_DATA_DIR",
+        os.path.join(os.path.dirname(__file__), "sample_data"),
+    )
+    fitness, job_cards, branding, mileage, cleaning, stabling = load_datasets(data_dir)
+
+    if not cleaning.empty and req.max_run is None:
+        try:
+            req.max_run = int(pd.to_numeric(cleaning["max_trains"], errors="coerce").max())
+        except Exception:
+            pass
+
+    train_ids = derive_train_set(fitness, job_cards, branding, mileage, stabling)
+    scores, reasons = compute_scores(train_ids, fitness, job_cards, branding, mileage)
+    results = solve_decisions(train_ids, scores, reasons, req)
+    return InductionResponse(results=results)
+
+
+class ChatRequest(BaseModel):
+    message: str
+    role: Optional[str] = None
+
+
+class ChatResponse(BaseModel):
+    reply: str
+
+
+@app.post("/chat", response_model=ChatResponse)
+def chat(req: ChatRequest):
+    text = (req.message or "").strip()
+    if not text:
+        return ChatResponse(reply="Please enter a question.")
+
+    q = text.lower()
+    role = (req.role or "commuter").lower()
+    if role == "admin":
+        if any(k in q for k in ["induction", "optimizer", "schedule"]):
+            return ChatResponse(reply="Admin → Induction: run the optimizer and review results.")
+        if any(k in q for k in ["stabling", "depot"]):
+            return ChatResponse(reply="Admin → Stabling: view depot schematic and simulate moves.")
+        if any(k in q for k in ["maintenance", "job card", "job cards"]):
+            return ChatResponse(reply="Admin → Maintenance: review job cards and statuses.")
+        if any(k in q for k in ["kpi", "metrics"]):
+            return ChatResponse(reply="Admin → KPI: view performance charts.")
+        if "conflict" in q:
+            return ChatResponse(reply="Admin → Conflicts: inspect fitness or job card conflicts.")
+        if any(k in q for k in ["migrate", "supabase"]):
+            return ChatResponse(reply="Admin → Migrate: run migration or generate sample data.")
+        return ChatResponse(reply="I can guide you through Induction, Stabling, Maintenance, KPI, Conflicts, and Migrate.")
+    else:
+        if any(k in q for k in ["ticket", "tickets"]):
+            return ChatResponse(reply="Go to Dashboard → Tickets to view or manage your tickets.")
+        if any(k in q for k in ["trip", "plan", "route", "routes"]):
+            return ChatResponse(reply="Use Dashboard → Plan to plan a trip and view suggested routes.")
+        if "alert" in q:
+            return ChatResponse(reply="Check Dashboard → Alerts for service updates and disruptions.")
+        if any(k in q for k in ["setting", "account", "profile", "login", "signup"]):
+            return ChatResponse(reply="Open Dashboard → Settings to update your profile and preferences.")
+        return ChatResponse(reply="I can help with tickets, trips/plan, alerts, and settings. What do you need?")
 
 # Training Script
 def main():
@@ -658,3 +950,98 @@ def create_sample_data():
 
 if __name__ == "__main__":
     main()
+
+# =============================
+# Conflicts Engine Integration
+# =============================
+
+# Paths to conflict system assets with local override
+def _resolve_conflict_paths():
+    local_dir = os.path.join(os.path.dirname(__file__), "conflict")
+    legacy_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "conflict_system", "conflict_system")
+    # Prefer local_dir if both files exist; otherwise fallback to legacy_dir
+    local_rules = os.path.join(local_dir, "rules.yaml")
+    local_trains = os.path.join(local_dir, "trains.json")
+    legacy_rules = os.path.join(legacy_dir, "rules.yaml")
+    legacy_trains = os.path.join(legacy_dir, "trains.json")
+    if os.path.exists(local_rules) and os.path.exists(local_trains):
+        return local_rules, local_trains
+    return legacy_rules, legacy_trains
+
+def _safe_load_rules_and_trains():
+    try:
+        rules_path, trains_path = _resolve_conflict_paths()
+        with open(rules_path, "r", encoding="utf-8") as f:
+            rules_cfg = yaml.safe_load(f) or {}
+        rules_list = rules_cfg.get("rules", [])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load rules.yaml: {e}")
+    try:
+        with open(trains_path, "r", encoding="utf-8") as f:
+            trains = json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to load trains.json: {e}")
+    return rules_list, trains
+
+def _extract_field(data: dict, field_path: str):
+    parts = field_path.split(".")
+    current: any = data
+    for i, part in enumerate(parts):
+        if "[*]" in part:
+            list_field = part.replace("[*]", "")
+            if list_field not in current or not isinstance(current[list_field], list):
+                return None
+            sub_field = ".".join(parts[i + 1:])
+            return [_extract_field(item, sub_field) for item in current[list_field]]
+        else:
+            if part not in current:
+                return None
+            current = current[part]
+    return current
+
+def _evaluate(operator: str, field_value, expected):
+    if operator == "eq":
+        return field_value == expected
+    if operator == "date_gt":
+        if not field_value:
+            return False
+        try:
+            date_val = dateutil_parser.parse(field_value)
+        except Exception:
+            return False
+        return date_val > datetime.now()
+    if operator == "empty":
+        return not field_value
+    if operator == "all_eq":
+        if not isinstance(field_value, list):
+            return False
+        return all(v == expected for v in field_value)
+    return False
+
+def _detect_conflicts_for_train(train_id: str):
+    rules, trains = _safe_load_rules_and_trains()
+    train_data = trains.get(train_id)
+    if not train_data:
+        return {"train_id": train_id, "conflicts": [{"rule": "system", "status": "failed", "reason": "Train not found"}]}
+    conflicts = []
+    for rule in rules:
+        field_val = _extract_field(train_data, rule.get("field", ""))
+        result = _evaluate(rule.get("operator", "eq"), field_val, rule.get("value"))
+        if rule.get("invert"):
+            result = not result
+        if not result:
+            conflicts.append({
+                "rule": rule.get("name", "unknown"),
+                "status": "failed",
+                "reason": rule.get("message", "Rule failed"),
+            })
+    return {"train_id": train_id, "conflicts": conflicts}
+
+@app.get("/api/conflicts")
+def api_get_all_conflicts():
+    rules, trains = _safe_load_rules_and_trains()
+    return [_detect_conflicts_for_train(tid) for tid in trains.keys()]
+
+@app.get("/api/conflicts/{train_id}")
+def api_get_conflicts(train_id: str):
+    return _detect_conflicts_for_train(train_id)

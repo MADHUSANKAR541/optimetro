@@ -19,7 +19,8 @@ import {
   FiTag,
   FiCircle,
   FiTrendingUp,
-  FiCalendar
+  FiCalendar,
+  FiUsers
 } from 'react-icons/fi';
 import styles from './Sidebar.module.scss';
 
@@ -46,6 +47,7 @@ const adminItems: SidebarItem[] = [
   { href: '/admin/dashboard/branding', label: 'Branding', icon: <FiTag /> },
   { href: '/admin/dashboard/stabling', label: 'Stabling', icon: <FiCircle /> },
   { href: '/admin/dashboard/kpi', label: 'KPIs', icon: <FiTrendingUp /> },
+  { href: '/admin/dashboard/users', label: 'Users', icon: <FiUsers /> },
 ];
 
 export function Sidebar() {

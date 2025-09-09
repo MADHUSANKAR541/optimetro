@@ -20,10 +20,79 @@ export default function KPIPage() {
   const [kpiData, setKpiData] = useState<KPI[]>([]);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState('7d');
+  const [demand, setDemand] = useState<{ hour: string; demand: number }[]>([]);
+  const [selectedStation, setSelectedStation] = useState<string>('');
+  const [stations, setStations] = useState<string[]>([]);
 
   useEffect(() => {
     loadKPIData();
   }, [timeRange]);
+
+  const loadStations = React.useCallback(async () => {
+    try {
+      const res = await fetch('/api/stations');
+      const data = await res.json();
+      const list: string[] = Array.isArray(data?.stations) ? data.stations : [];
+      if (list.length > 0) {
+        setStations(list);
+        // If current selection is not available, default to first backend-provided station
+        if (!selectedStation || !list.includes(selectedStation)) {
+          setSelectedStation(list[0]);
+        }
+        return;
+      }
+      // Fallback: derive station names from GTFS stops when backend has none
+      try {
+        const stopsRes = await fetch('/api/gtfs/stops');
+        const stopsJson = await stopsRes.json();
+        const stops: any[] = Array.isArray(stopsJson?.stops) ? stopsJson.stops : [];
+        const names = Array.from(new Set(stops.map((s: any) => String(s.stop_name || '').trim()).filter(Boolean)));
+        setStations(names);
+        if (!selectedStation && names.length > 0) setSelectedStation(names[0]);
+      } catch {
+        setStations([]);
+      }
+    } catch {
+      // ignore
+    }
+  }, [selectedStation]);
+
+  useEffect(() => {
+    loadStations();
+  }, [loadStations]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!selectedStation) return;
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const date = tomorrow.toISOString().slice(0,10);
+        const res = await fetch('/api/demand/forecast', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ station: selectedStation, date })
+        });
+        if (!res.ok) {
+          try {
+            const err = await res.json();
+            const detail: string = String(err?.detail || '');
+            if (detail.includes('No model available')) {
+              // Refresh stations from backend and pick a valid one
+              await loadStations();
+            }
+          } catch {}
+          setDemand([]);
+          return;
+        }
+        const data = await res.json();
+        const preds: any[] = Array.isArray(data?.predictions) ? data.predictions : [];
+        setDemand(preds.map(p => ({ hour: p.hour, demand: Number(p.demand) || 0 })));
+      } catch {
+        setDemand([]);
+      }
+    })();
+  }, [selectedStation]);
 
   const loadKPIData = async () => {
     try {
@@ -86,6 +155,14 @@ export default function KPIPage() {
       >
         <h1 className={styles.title}>Key Performance Indicators</h1>
         <div className={styles.controls}>
+          <select 
+            value={selectedStation}
+            onChange={(e) => setSelectedStation(e.target.value)}
+            className={styles.timeRangeSelect}
+          >
+            <option value="">Station</option>
+            {stations.map(s => (<option key={s} value={s}>{s}</option>))}
+          </select>
           <select 
             value={timeRange} 
             onChange={(e) => setTimeRange(e.target.value)}
@@ -195,6 +272,29 @@ export default function KPIPage() {
 
       {/* Charts */}
       <div className={styles.charts}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+        >
+          <Card variant="elevated" className={styles.chartCard}>
+            <CardHeader>
+              <h2 className={styles.chartTitle}>Forecast Demand ({selectedStation || 'Station'})</h2>
+            </CardHeader>
+            <CardContent>
+              <Chart
+                data={demand.map(d => ({ name: d.hour, demand: d.demand }))}
+                type="line"
+                dataKey="demand"
+                xAxisKey="name"
+                yDomain={[0, 'auto']}
+                color="#8b5cf6"
+                height={300}
+                className={`forecast-${selectedStation}`}
+              />
+            </CardContent>
+          </Card>
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
