@@ -38,12 +38,17 @@ export default function StablingPage() {
 
   // Map state and data
   const { mapState, toggleLayer, selectTrain, clearSelection } = useMapState();
-  const { data: stationsData = [], loading: stationsLoading } = useStations();
-  const { data: linesData = [], loading: linesLoading } = useMetroLines();
-  const { data: depotData = {}, loading: depotLoading } = useDepot();
-  const { data: trainsData = [], loading: trainsLoading } = useTrains();
+  const stations = useStations();
+  const lines = useMetroLines();
+  const depot = useDepot();
+  const trains = useTrains();
 
   useEffect(() => {
+    // Load mock data on mount
+    stations.fetchData();
+    lines.fetchData();
+    depot.fetchData();
+    trains.fetchData();
     loadShuntingMoves();
   }, []);
 
@@ -72,8 +77,8 @@ export default function StablingPage() {
     toast.success(`Moved ${trainId} from ${fromBay} to ${toBay}`);
     
     // Update train position in mock data
-    if (trainsData) {
-      const train = trainsData.find(t => t.id === trainId);
+    if (trains.data) {
+      const train = trains.data.find(t => t.id === trainId);
       if (train) {
         train.position = { ...train.position, bayId: toBay };
       }
@@ -104,9 +109,9 @@ export default function StablingPage() {
   };
 
   const getStatusCounts = () => {
-    if (!trainsData) return { revenue: 0, standby: 0, IBL: 0, maintenance: 0 };
+    if (!trains.data) return { revenue: 0, standby: 0, IBL: 0, maintenance: 0 };
     
-    return trainsData.reduce((counts, train) => {
+    return trains.data.reduce((counts, train) => {
       counts[train.status]++;
       return counts;
     }, { revenue: 0, standby: 0, IBL: 0, maintenance: 0 });
@@ -202,36 +207,36 @@ export default function StablingPage() {
             }
           >
             <div className={styles.mapWrapper}>
-              <MapContainer
-                center={mapState.center}
-                zoom={mapState.zoom}
-                height="100%"
-                bounds={viewMode === 'depot' && depotData ? depotData.bounds : undefined}
-              >
-                {viewMode === 'depot' ? (
-                  // Depot View
-                  depotData && (
+              {viewMode === 'depot' ? (
+                depot.data && (
+                  <div style={{ height: '600px' }}>
                     <DepotSchematicOverlay
-                      depot={depotData}
-                      trains={trainsData || []}
+                      depot={depot.data}
+                      trains={trains.data || []}
                       onTrainMove={handleTrainMove}
                       onTrainClick={handleTrainClick}
                       selectedTrain={selectedTrain}
                     />
-                  )
-                ) : (
+                  </div>
+                )
+              ) : (
+                <MapContainer
+                  center={mapState.center}
+                  zoom={mapState.zoom}
+                  height="100%"
+                >
                   // City View
                   <>
                     <MetroLayers
-                      lines={linesData || []}
-                      stations={stationsData || []}
+                      lines={lines.data || []}
+                      stations={stations.data || []}
                       showLines={mapState.layers.find(l => l.id === 'lines')?.visible}
                       showStations={mapState.layers.find(l => l.id === 'stations')?.visible}
                       onStationClick={handleStationClick}
                     />
                     
                     {/* Train Markers */}
-                    {trainsData?.map((train) => {
+                    {trains.data?.map((train) => {
                       if (!train.position?.lat || !train.position?.lng) return null;
                       
                       return (
@@ -245,8 +250,8 @@ export default function StablingPage() {
                       );
                     })}
                   </>
-                )}
-              </MapContainer>
+                </MapContainer>
+              )}
 
               {/* Layer Controls */}
               {showLayers && (

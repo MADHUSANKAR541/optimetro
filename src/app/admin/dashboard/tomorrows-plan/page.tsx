@@ -18,6 +18,7 @@ interface TrainStatus {
   reasons: string[];
   isReady?: boolean;
   isScheduled?: boolean;
+  firstOutTime?: string;
 }
 
 interface Conflict {
@@ -79,7 +80,8 @@ export default function TomorrowsPlanPage() {
                     scoreByTrainId[trainKey] = r.score;
                   }
                   const action = (r?.action || r?.decision || '').toString().toLowerCase();
-                  if (trainKey && (action === 'revenue' || action === 'run')) {
+                  // Only schedule trains that have a non-negative score
+                  if (trainKey && (action === 'revenue' || action === 'run') && typeof r?.score === 'number' && r.score >= 0) {
                     scheduledIdSet.add(trainKey);
                   }
                 }
@@ -145,6 +147,20 @@ export default function TomorrowsPlanPage() {
       }
     };
     load();
+
+    // Restore any saved planned schedule
+    try {
+      if (typeof window !== 'undefined') {
+        const saved = window.localStorage.getItem('tomorrows_plan_schedule');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            setPlannedSchedule(parsed);
+            setIsPlanActive(true);
+          }
+        }
+      }
+    } catch {}
   }, []);
 
   const generatePlan = async () => {
@@ -166,39 +182,104 @@ export default function TomorrowsPlanPage() {
         const dateStr = tomorrow.toLocaleDateString();
         setPlanDate(dateStr);
 
-        // Extract scheduled trains (run/revenue)
+        // Extract scheduled trains (run/revenue) with non-negative score
         const results: any[] = Array.isArray(data?.results) ? data.results : [];
         const scheduledIds = new Set<string>();
-        const scheduleRows: Array<{ date: string; trainNumber: string; trainName: string; origin: string; destination: string; departure: string; arrival: string; status: string }> = [];
-        for (const r of results) {
-          const id = r.train_id || r.trainId;
-          const action = String(r.action || r.decision || '').toLowerCase();
-          if (id && (action === 'run' || action === 'revenue')) {
-            scheduledIds.add(id);
-            scheduleRows.push({
-              date: dateStr,
-              trainNumber: id,
-              trainName: r.train_name || id,
-              origin: r.origin || '-',
-              destination: r.destination || '-',
-              departure: r.departure_time || '-',
-              arrival: r.arrival_time || '-',
-              status: 'Run'
-            });
+
+        // Pull GTFS stops to determine origin/destination names
+        let originName = '-';
+        let destinationName = '-';
+        try {
+          const stopsRes = await fetch('/api/gtfs/stops');
+          if (stopsRes.ok) {
+            const stopsJson = await stopsRes.json();
+            const stops: any[] = Array.isArray(stopsJson?.stops) ? stopsJson.stops : [];
+            if (stops.length > 0) {
+              // Use extreme latitude stops as ends of the corridor
+              const northMost = stops.reduce((a: any, b: any) => (Number(a.stop_lat) > Number(b.stop_lat) ? a : b));
+              const southMost = stops.reduce((a: any, b: any) => (Number(a.stop_lat) < Number(b.stop_lat) ? a : b));
+              originName = northMost?.stop_name || originName;
+              destinationName = southMost?.stop_name || destinationName;
+            }
           }
+        } catch {}
+
+        // Build full-day schedule: 06:00 to 23:00, 15-min headways
+        const scheduleRows: Array<{ date: string; trainNumber: string; trainName: string; origin: string; destination: string; departure: string; arrival: string; status: string }> = [];
+        const eligible = results
+          .map((r: any) => ({
+            id: r.train_id || r.trainId,
+            action: String(r.action || r.decision || '').toLowerCase(),
+            score: typeof r.score === 'number' ? r.score : 0,
+            train_name: r.train_name
+          }))
+          .filter(r => r.id && (r.action === 'run' || r.action === 'revenue') && r.score >= 0);
+
+        for (const r of eligible) scheduledIds.add(r.id);
+
+        const headwayMinutes = 15;
+        const tripMinutes = 30; // simple assumption
+        const start = new Date(tomorrow);
+        start.setHours(6, 0, 0, 0);
+        const end = new Date(tomorrow);
+        end.setHours(23, 0, 0, 0);
+        const timeFmt = (d: Date) => d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        let slotIndex = 0;
+        for (let tms = start.getTime(); tms <= end.getTime(); tms += headwayMinutes * 60 * 1000) {
+          if (eligible.length === 0) break;
+          const r = eligible[slotIndex % eligible.length];
+          const dep = new Date(tms);
+          const arr = new Date(dep.getTime() + tripMinutes * 60 * 1000);
+          const isOutbound = (slotIndex % 2) === 0; // alternate directions
+          const tripOrigin = isOutbound ? originName : destinationName;
+          const tripDestination = isOutbound ? destinationName : originName;
+          scheduleRows.push({
+            date: dateStr,
+            trainNumber: r.id,
+            trainName: r.train_name || r.id,
+            origin: tripOrigin,
+            destination: tripDestination,
+            departure: timeFmt(dep),
+            arrival: timeFmt(arr),
+            status: 'Run'
+          });
+          slotIndex++;
         }
 
         setPlannedSchedule(scheduleRows);
         setIsPlanActive(true);
 
-        // Filter visible trains to scheduled ones and mark scheduled flags
-        setTrains(prev => prev
-          .map(t => ({
-            ...t,
-            isScheduled: scheduledIds.has(t.train_id)
-          }))
-          .filter(t => t.isScheduled)
-        );
+        // Persist for reload
+        try {
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem('tomorrows_plan_schedule', JSON.stringify(scheduleRows));
+          }
+        } catch {}
+
+        // Merge induction decisions with DB data and show ALL trains that are ready to use
+        setTrains(prev => {
+          const firstOutByTrain = new Map<string, string>();
+          for (const row of scheduleRows) {
+            if (!firstOutByTrain.has(row.trainNumber)) firstOutByTrain.set(row.trainNumber, row.departure);
+          }
+          const merged = prev.map(t => {
+            const isSched = scheduledIds.has(t.train_id);
+            const nextStatus: 'run' | 'standby' | 'maintenance' = isSched ? 'run' : t.status;
+            // Recompute readiness: must not be maintenance and no conflicts
+            const ready = nextStatus !== 'maintenance' && (t.conflicts?.length ?? 0) === 0;
+            return {
+              ...t,
+              status: nextStatus,
+              isScheduled: isSched,
+              isReady: ready,
+              // Attach first out time for depot display
+              firstOutTime: firstOutByTrain.get(t.train_id)
+            } as typeof t;
+          });
+          // Show all READY trains; scheduled ones will be highlighted via flags
+          return merged.filter(t => t.isReady);
+        });
 
         setLastUpdated(new Date());
         setIsGenerating(false);
@@ -355,6 +436,13 @@ export default function TomorrowsPlanPage() {
   const readyCount = trains.filter(t => t.isReady).length;
   const scheduledCount = trains.filter(t => t.isScheduled).length;
 
+  // Compute next day's date string for display defaults
+  const nextDayDisplay = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toLocaleDateString();
+  })();
+
   return (
     <>
     <div className={styles.dashboard}>
@@ -362,7 +450,7 @@ export default function TomorrowsPlanPage() {
       <div className={styles.header}>
         <div className={styles.titleSection}>
           <h1 className={styles.title}>🌟 Tomorrow's Plan</h1>
-          <span className={styles.date}>Date: {isPlanActive && planDate ? planDate : new Date().toLocaleDateString()}</span>
+          <span className={styles.date}>Date: {planDate || nextDayDisplay}</span>
         </div>
         <div className={styles.actions}>
           <Button
@@ -427,6 +515,42 @@ export default function TomorrowsPlanPage() {
 
       {/* Main Content */}
       <div className={styles.mainContent}>
+        {/* Planned Schedule */}
+        {isPlanActive && Array.isArray(plannedSchedule) && plannedSchedule.length > 0 && (
+          <div className={styles.trainList}>
+            <Card className={styles.trainCard}>
+              <div className={styles.cardHeader}>
+                <h2>📅 Scheduled Runs for {planDate}</h2>
+              </div>
+              <div className={styles.tableContainer}>
+                <table className={styles.trainTable}>
+                  <thead>
+                    <tr>
+                      <th>Train</th>
+                      <th>Origin</th>
+                      <th>Destination</th>
+                      <th>Departure</th>
+                      <th>Arrival</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {plannedSchedule.map((r, idx) => (
+                      <tr key={`${r.trainNumber}-${idx}`}>
+                        <td>{r.trainNumber}</td>
+                        <td>{r.origin}</td>
+                        <td>{r.destination}</td>
+                        <td>{r.departure}</td>
+                        <td>{r.arrival}</td>
+                        <td>{r.status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </div>
+        )}
         {/* Train List */}
         <div className={styles.trainList}>
           <Card className={styles.trainCard}>
@@ -523,8 +647,11 @@ export default function TomorrowsPlanPage() {
                   <div key={bayId} className={styles.bay}>
                     <div className={styles.bayId}>{bayId}</div>
                     {train && (
-                      <div className={`${styles.train} ${styles[`train${train.status}`]}`}>
-                        {train.train_id.split('-')[1]}
+                      <div className={`${styles.train} ${styles[`train${train.status}`]}`} title={train.firstOutTime ? `First out: ${train.firstOutTime}` : undefined}>
+                        <div>{train.train_id.split('-')[1]}</div>
+                        {train.firstOutTime && (
+                          <div className={styles.firstOutBadge}>{train.firstOutTime}</div>
+                        )}
                       </div>
                     )}
                   </div>
