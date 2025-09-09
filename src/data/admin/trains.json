@@ -1,0 +1,110 @@
+[
+  {
+    "id": "KMRL-001",
+    "trainNumber": "KMRL-001",
+    "status": "revenue",
+    "mileage": 15420,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": true
+    },
+    "position": {
+      "bayId": "BAY_001",
+      "lat": 9.88,
+      "lng": 76.18
+    },
+    "jobCards": 0,
+    "conflicts": 0
+  },
+  {
+    "id": "KMRL-002",
+    "trainNumber": "KMRL-002",
+    "status": "standby",
+    "mileage": 12850,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": false
+    },
+    "position": {
+      "bayId": "BAY_002",
+      "lat": 9.89,
+      "lng": 76.19
+    },
+    "jobCards": 1,
+    "conflicts": 1
+  },
+  {
+    "id": "KMRL-003",
+    "trainNumber": "KMRL-003",
+    "status": "IBL",
+    "mileage": 18920,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": false,
+      "telecom": true
+    },
+    "position": {
+      "bayId": "BAY_002",
+      "lat": 9.89,
+      "lng": 76.19
+    },
+    "jobCards": 2,
+    "conflicts": 1
+  },
+  {
+    "id": "KMRL-004",
+    "trainNumber": "KMRL-004",
+    "status": "maintenance",
+    "mileage": 22100,
+    "fitness": {
+      "rollingStock": false,
+      "signalling": true,
+      "telecom": true
+    },
+    "position": {
+      "bayId": "BAY_003",
+      "lat": 9.90,
+      "lng": 76.20
+    },
+    "jobCards": 3,
+    "conflicts": 2
+  },
+  {
+    "id": "KMRL-005",
+    "trainNumber": "KMRL-005",
+    "status": "revenue",
+    "mileage": 16750,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": true
+    },
+    "position": {
+      "bayId": "BAY_005",
+      "lat": 9.92,
+      "lng": 76.22
+    },
+    "jobCards": 0,
+    "conflicts": 0
+  },
+  {
+    "id": "KMRL-006",
+    "trainNumber": "KMRL-006",
+    "status": "standby",
+    "mileage": 14230,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": true
+    },
+    "position": {
+      "bayId": "BAY_005",
+      "lat": 9.92,
+      "lng": 76.22
+    },
+    "jobCards": 1,
+    "conflicts": 0
+  }
+]

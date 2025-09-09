@@ -1,0 +1,307 @@
+.dashboard {
+  padding: var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--space-2xl);
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-xl);
+}
+
+.nextDepartureCard {
+  grid-column: span 2;
+}
+
+.planTripCard {
+  grid-column: span 1;
+}
+
+.recentTripsCard,
+.ticketsCard,
+.alertsCard {
+  grid-column: span 1;
+}
+
+.miniMapCard {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.cardIcon {
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+}
+
+.cardDescription {
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-lg);
+}
+
+.actionButton {
+  width: 100%;
+}
+
+.departureInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.route {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border-light);
+}
+
+.station {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.arrow {
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+}
+
+.timeInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-lg);
+  color: white;
+}
+
+.time {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+}
+
+.platform {
+  font-size: var(--font-size-sm);
+  opacity: 0.9;
+}
+
+.tripsList,
+.ticketsList,
+.alertsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.tripItem,
+.ticketItem,
+.alertItem {
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+}
+
+.tripRoute {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.tripFrom,
+.tripTo {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.tripArrow {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.tripDetails {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tripDate {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.tripFare {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.ticketInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-sm);
+}
+
+.ticketType {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.ticketValidity {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.alertHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+}
+
+.alertIcon {
+  font-size: var(--font-size-sm);
+  
+  &.info {
+    color: var(--color-info);
+  }
+  
+  &.warning {
+    color: var(--color-warning);
+  }
+  
+  &.error {
+    color: var(--color-error);
+  }
+}
+
+.alertTitle {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.alertDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.skeletonItem {
+  height: 60px;
+  background: linear-gradient(90deg, var(--color-surface) 0%, var(--color-border-light) 50%, var(--color-surface) 100%);
+  background-size: 200px 100%;
+  border-radius: var(--radius-lg);
+  animation: shimmer 1.5s infinite linear;
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .nextDepartureCard,
+  .planTripCard {
+    grid-column: span 1;
+  }
+  
+  .miniMapCard {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: var(--space-md);
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .route {
+    padding: var(--space-md);
+  }
+  
+  .station {
+    font-size: var(--font-size-base);
+  }
+  
+  .time {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 640px) {
+  .timeInfo {
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-align: center;
+  }
+  
+  .tripDetails {
+    flex-direction: column;
+    gap: var(--space-xs);
+    align-items: flex-start;
+  }
+}

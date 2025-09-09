@@ -1,0 +1,57 @@
+[
+  {
+    "id": "ALERT_001",
+    "title": "Signal Maintenance",
+    "description": "Signal maintenance work between Kaloor and Town Hall stations. Expect delays of 5-10 minutes.",
+    "severity": "warning",
+    "type": "maintenance",
+    "lat": 9.9597,
+    "lng": 76.2581,
+    "affectedLines": ["Line 1"],
+    "affectedStations": ["KALOOR", "TOWN_HALL"],
+    "startTime": "2024-01-15T22:00:00Z",
+    "endTime": "2024-01-16T04:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "ALERT_002",
+    "title": "Platform Crowding",
+    "description": "Heavy crowding at MG Road station during peak hours. Please use alternative entrances.",
+    "severity": "info",
+    "type": "crowding",
+    "lat": 9.9314,
+    "lng": 76.2371,
+    "affectedLines": ["Line 1"],
+    "affectedStations": ["MG_ROAD"],
+    "startTime": "2024-01-15T08:00:00Z",
+    "endTime": "2024-01-15T10:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "ALERT_003",
+    "title": "Weather Advisory",
+    "description": "Heavy rain expected. Reduced visibility may affect train operations.",
+    "severity": "warning",
+    "type": "weather",
+    "lat": 9.9312,
+    "lng": 76.2673,
+    "affectedLines": ["Line 1", "Line 2"],
+    "affectedStations": ["ALUVA", "EDAPALLY", "PALARIVATTOM", "JLN_STADIUM", "KALOOR", "TOWN_HALL", "MG_ROAD", "MAHARAJA_COLLEGE", "ERNAKULAM_SOUTH", "THYKOODAM", "VYTILLA", "SN_JUNCTION"],
+    "startTime": "2024-01-15T14:00:00Z",
+    "endTime": "2024-01-15T18:00:00Z",
+    "status": "active"
+  },
+  {
+    "id": "ALERT_004",
+    "title": "Technical Issue",
+    "description": "Door mechanism issue detected on train KMRL-015. Train taken out of service for inspection.",
+    "severity": "error",
+    "type": "technical",
+    "lat": 9.9881,
+    "lng": 76.2791,
+    "affectedLines": ["Line 1"],
+    "affectedStations": ["JLN_STADIUM"],
+    "startTime": "2024-01-15T12:30:00Z",
+    "status": "active"
+  }
+]

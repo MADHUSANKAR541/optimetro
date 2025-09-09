@@ -1,0 +1,898 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, 
+    var(--color-background) 0%, 
+    rgba(37, 99, 235, 0.05) 50%, 
+    rgba(5, 150, 105, 0.05) 100%
+  );
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(220, 38, 38, 0.05) 0%, transparent 50%);
+    z-index: 1;
+  }
+}
+
+.backgroundElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.parallaxElement {
+  position: absolute;
+}
+
+.gradientBlob1 {
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: 50%;
+  opacity: 0.1;
+  top: 10%;
+  left: 10%;
+  filter: blur(40px);
+}
+
+.gradientBlob2 {
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+  border-radius: 50%;
+  opacity: 0.08;
+  top: 60%;
+  right: 20%;
+  filter: blur(30px);
+}
+
+.gradientBlob3 {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+  border-radius: 50%;
+  opacity: 0.06;
+  bottom: 20%;
+  left: 60%;
+  filter: blur(20px);
+}
+
+.metroTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  
+  // Hide on desktop screens
+  @media (min-width: 1200px) {
+    display: none;
+  }
+}
+
+.trackLine {
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.track {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--color-metro-blue) 25%, 
+    var(--color-metro-green) 50%, 
+    var(--color-metro-red) 75%, 
+    transparent 100%
+  );
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 8px,
+      var(--color-background) 8px,
+      var(--color-background) 12px
+    );
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      rgba(37, 99, 235, 0.3) 25%, 
+      rgba(5, 150, 105, 0.3) 50%, 
+      rgba(220, 38, 38, 0.3) 75%, 
+      transparent 100%
+    );
+    animation: trackGlow 2s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes trackGlow {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+.trainElement {
+  position: absolute;
+  bottom: 15%;
+  left: -10%;
+  transform: translateY(50%);
+  animation: trainJourney 8s ease-in-out infinite;
+  z-index: 4;
+}
+
+.train {
+  width: 80px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  margin: 0 auto;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    opacity: 0.3;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      var(--color-primary) 30%, 
+      rgba(37, 99, 235, 0.8) 70%, 
+      transparent 100%
+    );
+    transform: translate(-50%, -50%);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+    z-index: -1;
+  }
+}
+
+.trainTrail {
+  position: absolute;
+  top: 50%;
+  left: -50px;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(37, 99, 235, 0.6) 50%, 
+    transparent 100%
+  );
+  transform: translateY(-50%);
+  animation: trailFade 0.5s ease-out infinite;
+}
+
+@keyframes trailFade {
+  0% {
+    opacity: 0.8;
+    transform: translateY(-50%) scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0.5);
+  }
+}
+
+.trainIcon {
+  color: white;
+  font-size: var(--font-size-xl);
+  animation: trainWiggle 0.5s ease-in-out infinite;
+}
+
+@keyframes trainJourney {
+  0% {
+    left: -10%;
+    transform: translateY(100%) scale(0.8);
+  }
+  25% {
+    left: 25%;
+    transform: translateY(50%) scale(1);
+  }
+  50% {
+    left: 60%;
+    transform: translateY(50%) scale(1.1);
+  }
+  75% {
+    left: 85%;
+    transform: translateY(50%) scale(1);
+  }
+  100% {
+    left: 110%;
+    transform: translateY(50%) scale(0.8);
+  }
+}
+
+@keyframes trainWiggle {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateX(1px) rotate(0.5deg);
+  }
+  75% {
+    transform: translateX(-1px) rotate(-0.5deg);
+  }
+}
+
+// Right Side Train Tracks - Desktop Only
+.rightSideTracks {
+  position: absolute;
+  top: 0;
+  right: 180px; // Move inward from the edge
+  width: 300px;
+  height: 100vh;
+  z-index: 3;
+  display: none;
+  
+  @media (min-width: 1200px) {
+    display: block;
+  }
+}
+
+.rightTrack {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  
+  &:first-child {
+    left: 0;
+  }
+  
+  &:last-child {
+    left: 50%; // Position right track at 50% instead of right: 0
+  }
+}
+
+.rightTrackLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  transform: translateX(-50%);
+  
+  .track {
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -1px;
+      right: -1px;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 8px,
+        var(--color-background) 8px,
+        var(--color-background) 12px
+      );
+      border-radius: 2px;
+    }
+  }
+}
+
+// First track (left side) - Green to Red gradient
+.rightTrack:first-child .rightTrackLine .track {
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    var(--color-metro-green) 25%, 
+    var(--color-metro-red) 50%, 
+    var(--color-metro-green) 75%, 
+    transparent 100%
+  );
+}
+
+// Second track (right side) - Blue to Orange gradient
+.rightTrack:last-child .rightTrackLine .track {
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    var(--color-metro-blue) 25%, 
+    var(--color-metro-orange) 50%, 
+    var(--color-metro-blue) 75%, 
+    transparent 100%
+  );
+}
+
+.rightTrainElement1 {
+  position: absolute;
+  top: -10%;
+  left: 25%; // Positioned for left track (25% of rightSideTracks width)
+  transform: translateX(-50%);
+  animation: rightTrainJourney1 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  animation-delay: 0s;
+  z-index: 4;
+}
+
+.trainComposition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(90deg);
+  transform-origin: center;
+}
+
+
+
+.trainCar {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+  width: 50px;
+  height: 80px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  margin: 0 auto;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    opacity: 0.3;
+  }
+  
+  &:first-child::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, 
+      var(--color-secondary) 0%, 
+      rgba(5, 150, 105, 0.6) 50%, 
+      transparent 100%
+    );
+    transform: translate(-50%, -50%);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(5, 150, 105, 0.4);
+    z-index: -1;
+  }
+}
+
+.trainConnector {
+  width: 4px;
+  height: 8px;
+  background: var(--color-secondary);
+  border-radius: 2px;
+  margin: 2px auto;
+  box-shadow: 0 0 5px rgba(5, 150, 105, 0.3);
+}
+
+.rightTrainElement2 {
+  position: absolute;
+  bottom: -10%;
+  left: 75%; // Positioned for right track (75% of rightSideTracks width)
+  transform: translateX(-50%);
+  animation: rightTrainJourney2 8s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+  animation-delay: 0s;
+  z-index: 4;
+  
+  
+  .trainCar {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+    
+    &::before {
+      background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+    }
+    
+    &:first-child::after {
+      background: linear-gradient(90deg, 
+        var(--color-accent) 0%, 
+        rgba(220, 38, 38, 0.6) 50%, 
+        transparent 100%
+      );
+      box-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+    }
+  }
+  
+  .trainConnector {
+    background: var(--color-accent);
+    box-shadow: 0 0 5px rgba(220, 38, 38, 0.3);
+    margin: 2px auto;
+  }
+}
+
+@keyframes rightTrainJourney1 {
+  0% {
+    top: -10%;
+    left: 25%;
+    transform: translateX(-50%) scale(0.8) rotate(90deg);
+  }
+  15% {
+    top: 10%;
+    left: 25%;
+    transform: translateX(-50%) scale(0.9) rotate(90deg);
+  }
+  30% {
+    top: 30%;
+    left: 25%;
+    transform: translateX(-50%) scale(1) rotate(90deg);
+  }
+  50% {
+    top: 50%;
+    left: 25%;
+    transform: translateX(-50%) scale(1.05) rotate(90deg);
+  }
+  70% {
+    top: 70%;
+    left: 25%;
+    transform: translateX(-50%) scale(1) rotate(90deg);
+  }
+  85% {
+    top: 90%;
+    left: 25%;
+    transform: translateX(-50%) scale(0.9) rotate(90deg);
+  }
+  100% {
+    top: 110%;
+    left: 25%;
+    transform: translateX(-50%) scale(0.8) rotate(90deg);
+  }
+}
+
+@keyframes rightTrainJourney2 {
+  0% {
+    bottom: -10%;
+    left: 75%;
+    transform: translateX(-50%) scale(0.8) rotate(270deg);
+  }
+  15% {
+    bottom: 10%;
+    left: 75%;
+    transform: translateX(-50%) scale(0.9) rotate(270deg);
+  }
+  30% {
+    bottom: 30%;
+    left: 75%;
+    transform: translateX(-50%) scale(1) rotate(270deg);
+  }
+  50% {
+    bottom: 50%;
+    left: 75%;
+    transform: translateX(-50%) scale(1.05) rotate(270deg);
+  }
+  70% {
+    bottom: 70%;
+    left: 75%;
+    transform: translateX(-50%) scale(1) rotate(270deg);
+  }
+  85% {
+    bottom: 90%;
+    left: 75%;
+    transform: translateX(-50%) scale(0.9) rotate(270deg);
+  }
+  100% {
+    bottom: 110%;
+    left: 75%;
+    transform: translateX(-50%) scale(0.8) rotate(270deg);
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3xl);
+  align-items: center;
+}
+
+.textContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.title {
+  font-size: var(--font-size-5xl);
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+  margin: 0;
+  
+  .highlight {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+.subtitle {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 500px;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.visualContent {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 20%;
+  
+  // Hide station locations on desktop
+  @media (min-width: 1200px) {
+    display: none;
+  }
+}
+
+.metroVisual {
+  position: relative;
+  width: 300px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-lg);
+}
+
+.station {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--color-surface-elevated);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 3;
+  min-width: 80px;
+  
+  span {
+    font-weight: 600;
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    white-space: nowrap;
+  }
+}
+
+.stationIcon {
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+}
+
+.line {
+  flex: 1;
+  height: 4px;
+  background: linear-gradient(90deg, 
+    var(--color-metro-blue) 0%, 
+    var(--color-metro-green) 50%, 
+    var(--color-metro-red) 100%
+  );
+  border-radius: var(--radius-sm);
+  margin: 0 var(--space-md);
+  position: relative;
+  z-index: 2;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 8px,
+      var(--color-background) 8px,
+      var(--color-background) 12px
+    );
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, 
+      rgba(37, 99, 235, 0.2) 0%, 
+      rgba(5, 150, 105, 0.2) 50%, 
+      rgba(220, 38, 38, 0.2) 100%
+    );
+    border-radius: var(--radius-sm);
+  }
+}
+
+.floatingElements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.floatingIcon1 {
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  width: 40px;
+  height: 40px;
+  background: var(--color-surface-elevated);
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+  box-shadow: var(--shadow-md);
+  z-index: 5;
+}
+
+.floatingIcon2 {
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 35px;
+  height: 35px;
+  background: var(--color-surface-elevated);
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
+  font-size: var(--font-size-md);
+  box-shadow: var(--shadow-md);
+  z-index: 5;
+}
+
+.scrollIndicator {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.scrollArrow {
+  width: 40px;
+  height: 40px;
+  background: var(--color-surface-elevated);
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+}
+
+// Responsive
+@media (max-width: 1200px) {
+  .rightSideTracks {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: var(--space-2xl);
+    text-align: center;
+  }
+  
+  .title {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .ctaButtons {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 80vh;
+  }
+  
+  .content {
+    padding: 0 var(--space-md);
+  }
+  
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .subtitle {
+    font-size: var(--font-size-lg);
+  }
+  
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .metroVisual {
+    width: 250px;
+    height: 150px;
+    padding: var(--space-md);
+  }
+  
+  .station {
+    padding: var(--space-sm);
+    min-width: 70px;
+    
+    span {
+      font-size: var(--font-size-xs);
+    }
+  }
+  
+  .floatingIcon1 {
+    top: 5%;
+    right: 20%;
+    width: 35px;
+    height: 35px;
+    font-size: var(--font-size-md);
+  }
+  
+  .floatingIcon2 {
+    top: 5%;
+    left: 20%;
+    width: 30px;
+    height: 30px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .gradientBlob1,
+  .gradientBlob2,
+  .gradientBlob3 {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .train {
+    width: 60px;
+    height: 40px;
+    
+    &::after {
+      width: 80px;
+      height: 2px;
+    }
+  }
+  
+  .trainElement {
+    animation-duration: 6s;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .metroVisual {
+    width: 200px;
+    height: 120px;
+    padding: var(--space-sm);
+  }
+  
+  .station {
+    min-width: 60px;
+    padding: var(--space-xs);
+    
+    span {
+      font-size: 0.7rem;
+    }
+  }
+  
+  .floatingIcon1,
+  .floatingIcon2 {
+    display: none;
+  }
+  
+  .train {
+    width: 50px;
+    height: 35px;
+    
+    &::after {
+      width: 70px;
+      height: 2px;
+    }
+  }
+  
+  .trainElement {
+    animation-duration: 5s;
+  }
+  
+  .trainTrail {
+    display: none;
+  }
+}

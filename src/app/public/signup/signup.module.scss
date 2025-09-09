@@ -1,0 +1,810 @@
+// Modern Signup Page Styles - Metro themed
+.signupPage {
+  min-height: 100vh;
+  background: var(--color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  font-family: var(--font-family-sans);
+  position: relative;
+  overflow: hidden;
+}
+
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--space-xl);
+  max-width: 1000px;
+  width: 100%;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  min-height: 600px;
+  max-height: 700px;
+}
+
+// Form Section (Left Side)
+.formSection {
+  padding: var(--space-xl);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding-top: var(--space-2xl);
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 350px;
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+  line-height: var(--line-height-tight);
+  font-family: var(--font-family-display);
+}
+
+.loginPrompt {
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  
+  span {
+    color: var(--color-text-secondary);
+  }
+}
+
+.loginLink {
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-weight: 500;
+  transition: var(--transition-fast);
+  
+  &:hover {
+    color: var(--color-primary-dark);
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.label {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-xs);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.75rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+  z-index: 1;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: var(--transition-normal);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+.passwordToggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  z-index: 1;
+  transition: var(--transition-fast);
+  
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin: var(--space-sm) 0;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.checkboxLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  cursor: pointer;
+  user-select: none;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--color-metro-blue) 0%, var(--color-metro-green) 100%);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  margin-top: var(--space-xs);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-secondary) 100%);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+// Illustration Section (Right Side)
+.illustrationSection {
+  background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.illustrationContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+  max-height: 600px;
+}
+
+// Train Travel Illustration
+.smartphone {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 80px;
+  height: 140px;
+  background: #87ceeb;
+  border-radius: 20px;
+  z-index: 2;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: #000;
+    border-radius: 50%;
+  }
+}
+
+.phoneScreen {
+  position: absolute;
+  top: 20px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.highSpeedTrain {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  z-index: 3;
+  width: 200px;
+  height: 60px;
+}
+
+.trainBody {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.trainFront {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 50px;
+  background: linear-gradient(135deg, #fff 0%, #f0f8ff 100%);
+  border-radius: 20px 8px 8px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    height: 2px;
+    background: #3b82f6;
+    border-radius: 1px;
+  }
+}
+
+.headlight {
+  position: absolute;
+  top: 15px;
+  width: 8px;
+  height: 8px;
+  background: #ffa500;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #ffa500;
+  
+  &:first-child {
+    left: 8px;
+  }
+  
+  &:last-child {
+    right: 8px;
+  }
+}
+
+.trainCars {
+  position: absolute;
+  left: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 4px;
+}
+
+.trainCar {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #fff 0%, #f0f8ff 100%);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    height: 2px;
+    background: #3b82f6;
+    border-radius: 1px;
+  }
+}
+
+.speedLines {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.speedLine {
+  position: absolute;
+  width: 40px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 1px;
+  
+  &:nth-child(1) {
+    top: -10px;
+    animation: speedLineMove 2s infinite linear;
+  }
+  
+  &:nth-child(2) {
+    top: -5px;
+    animation: speedLineMove 2s infinite linear 0.3s;
+  }
+  
+  &:nth-child(3) {
+    top: 0px;
+    animation: speedLineMove 2s infinite linear 0.6s;
+  }
+  
+  &:nth-child(4) {
+    top: 5px;
+    animation: speedLineMove 2s infinite linear 0.9s;
+  }
+}
+
+.speedCircles {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.speedCircle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  
+  &:nth-child(1) {
+    top: -15px;
+    left: 0;
+    animation: speedCircleMove 3s infinite ease-in-out;
+  }
+  
+  &:nth-child(2) {
+    top: 0px;
+    left: 10px;
+    animation: speedCircleMove 3s infinite ease-in-out 0.5s;
+  }
+  
+  &:nth-child(3) {
+    top: 15px;
+    left: 5px;
+    animation: speedCircleMove 3s infinite ease-in-out 1s;
+  }
+}
+
+.locationPin1 {
+  position: absolute;
+  top: 20%;
+  left: 60%;
+  width: 16px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    background: #3b82f6;
+    border-radius: 50%;
+  }
+}
+
+.locationPin2 {
+  position: absolute;
+  top: 30%;
+  right: 15%;
+  width: 16px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    background: #3b82f6;
+    border-radius: 50%;
+  }
+}
+
+.locationPin3 {
+  position: absolute;
+  bottom: 25%;
+  right: 25%;
+  width: 16px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    background: #3b82f6;
+    border-radius: 50%;
+  }
+}
+
+.connectionLine1 {
+  position: absolute;
+  top: 25%;
+  left: 70%;
+  width: 60px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1px;
+  transform: rotate(15deg);
+  z-index: 1;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(255, 255, 255, 0.8) 4px,
+      rgba(255, 255, 255, 0.8) 8px
+    );
+  }
+}
+
+.connectionLine2 {
+  position: absolute;
+  top: 35%;
+  right: 20%;
+  width: 50px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1px;
+  transform: rotate(-10deg);
+  z-index: 1;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(255, 255, 255, 0.8) 4px,
+      rgba(255, 255, 255, 0.8) 8px
+    );
+  }
+}
+
+.connectionLine3 {
+  position: absolute;
+  bottom: 30%;
+  right: 30%;
+  width: 40px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 1px;
+  transform: rotate(25deg);
+  z-index: 1;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 4px,
+      rgba(255, 255, 255, 0.8) 4px,
+      rgba(255, 255, 255, 0.8) 8px
+    );
+  }
+}
+
+.backgroundTrack {
+  position: absolute;
+  bottom: 20%;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.3) 20%, 
+    rgba(255, 255, 255, 0.6) 50%, 
+    rgba(255, 255, 255, 0.3) 80%, 
+    transparent 100%
+  );
+  border-radius: 2px;
+  z-index: 1;
+}
+
+@keyframes speedLineMove {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(60px);
+    opacity: 0;
+  }
+}
+
+@keyframes speedCircleMove {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: 600px;
+    min-height: auto;
+    max-height: none;
+  }
+  
+  .illustrationSection {
+    order: -1;
+    min-height: 300px;
+  }
+  
+  .formSection {
+    padding: var(--space-xl);
+    align-items: center;
+    padding-top: var(--space-xl);
+  }
+  
+  .illustrationContainer {
+    min-height: 300px;
+    max-height: none;
+  }
+  
+  .smartphone {
+    width: 60px;
+    height: 100px;
+    left: 15px;
+  }
+  
+  .highSpeedTrain {
+    width: 150px;
+    height: 45px;
+  }
+  
+  .trainCar {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .trainFront {
+    width: 30px;
+    height: 35px;
+  }
+  
+  .locationPin1, .locationPin2, .locationPin3 {
+    width: 12px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .signupPage {
+    padding: var(--space-md);
+  }
+  
+  .container {
+    border-radius: var(--radius-xl);
+    min-height: 500px;
+  }
+  
+  .formSection {
+    padding: var(--space-lg);
+  }
+  
+  .title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .illustrationSection {
+    min-height: 250px;
+  }
+  
+  .illustrationContainer {
+    min-height: 250px;
+  }
+  
+  .smartphone {
+    width: 50px;
+    height: 80px;
+    left: 10px;
+  }
+  
+  .highSpeedTrain {
+    width: 120px;
+    height: 35px;
+  }
+  
+  .trainCar {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .trainFront {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .locationPin1, .locationPin2, .locationPin3 {
+    width: 10px;
+    height: 12px;
+  }
+  
+  .speedLine {
+    width: 30px;
+  }
+  
+  .speedCircle {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formSection {
+    padding: var(--space-md);
+  }
+
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .form {
+    gap: var(--space-md);
+  }
+  
+  .input {
+    padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+  }
+  
+  .inputIcon {
+    left: 0.875rem;
+  }
+  
+  .passwordToggle {
+    right: 0.875rem;
+  }
+
+  .submitButton {
+    padding: 0.875rem;
+  }
+  
+  .illustrationSection {
+    min-height: 200px;
+  }
+  
+  .illustrationContainer {
+    min-height: 200px;
+  }
+  
+  .smartphone {
+    width: 40px;
+    height: 65px;
+    left: 8px;
+  }
+  
+  .highSpeedTrain {
+    width: 100px;
+    height: 30px;
+  }
+  
+  .trainCar {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .trainFront {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .locationPin1, .locationPin2, .locationPin3 {
+    width: 8px;
+    height: 10px;
+  }
+  
+  .speedLine {
+    width: 25px;
+  }
+  
+  .speedCircle {
+    width: 12px;
+    height: 12px;
+  }
+}

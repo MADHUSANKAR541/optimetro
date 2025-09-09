@@ -1,0 +1,263 @@
+.rakeMarker {
+  position: relative;
+  display: inline-block;
+}
+
+.marker {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 3px solid white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  &.selected {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+  }
+}
+
+.markerIcon {
+  color: white;
+  font-size: var(--font-size-sm);
+  margin-bottom: 2px;
+}
+
+.markerLabel {
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+}
+
+.conflictBadge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: var(--color-error);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
+}
+
+.popup {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: var(--space-sm);
+  width: 280px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.popupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.popupTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.popupStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.statusBadge {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background: var(--color-error);
+    color: white;
+    border-color: var(--color-error);
+  }
+}
+
+.popupContent {
+  padding: var(--space-md);
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-sm);
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.infoLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.infoValue {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.fitnessSection {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.fitnessTitle {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.fitnessBar {
+  width: 100%;
+  height: 0.5rem;
+  background: var(--color-border-light);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: var(--space-sm);
+}
+
+.fitnessProgress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-error) 0%, var(--color-warning) 50%, var(--color-success) 100%);
+  transition: width var(--transition-fast);
+}
+
+.fitnessDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.fitnessItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fitnessLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.fitnessValue {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  
+  &.healthy {
+    color: var(--color-success);
+  }
+  
+  &.unhealthy {
+    color: var(--color-error);
+  }
+}
+
+.popupActions {
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.actionButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .popup {
+    width: 240px;
+  }
+  
+  .marker {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .markerIcon {
+    font-size: var(--font-size-xs);
+  }
+  
+  .markerLabel {
+    font-size: 10px;
+  }
+}

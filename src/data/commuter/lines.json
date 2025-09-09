@@ -1,0 +1,42 @@
+[
+  {
+    "id": "LINE_1",
+    "name": "Line 1",
+    "color": "#059669",
+    "stations": ["ALUVA", "EDAPALLY", "PALARIVATTOM", "JLN_STADIUM", "KALOOR", "TOWN_HALL", "MG_ROAD", "MAHARAJA_COLLEGE", "ERNAKULAM_SOUTH", "THYKOODAM"],
+    "coordinates": [
+      [10.1089, 76.3515],
+      [10.0258, 76.3071],
+      [10.0069, 76.2931],
+      [9.9881, 76.2791],
+      [9.9692, 76.2651],
+      [9.9503, 76.2511],
+      [9.9314, 76.2371],
+      [9.9125, 76.2231],
+      [9.8936, 76.2091],
+      [9.8747, 76.1951]
+    ]
+  },
+  {
+    "id": "LINE_2",
+    "name": "Line 2",
+    "color": "#2563eb",
+    "stations": ["THYKOODAM", "VYTILLA", "SN_JUNCTION"],
+    "coordinates": [
+      [9.8747, 76.1951],
+      [9.8558, 76.1811],
+      [9.8369, 76.1671]
+    ]
+  },
+  {
+    "id": "LINE_3",
+    "name": "Line 3",
+    "color": "#dc2626",
+    "stations": ["MG_ROAD", "KALOOR", "EDAPALLY"],
+    "coordinates": [
+      [9.9314, 76.2371],
+      [9.9692, 76.2651],
+      [10.0258, 76.3071]
+    ]
+  }
+]

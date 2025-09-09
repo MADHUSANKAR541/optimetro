@@ -1,0 +1,405 @@
+.planTrip {
+  padding: var(--space-xl);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--space-2xl);
+}
+
+.title {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plannerCard,
+.resultsCard,
+.tipsCard {
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.cardIcon {
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.stationInputs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-md);
+  align-items: end;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.inputLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.stationSelect {
+  padding: var(--space-md);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+.swapButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+    transform: rotate(180deg);
+  }
+}
+
+.actionButtons {
+  display: flex;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.planButton {
+  flex: 1;
+}
+
+.mapWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.mapActions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.layerControls {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.journeySummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-light);
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.summaryIcon {
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+}
+
+.summaryContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.summaryLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.summaryValue {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.journeySteps {
+  margin-bottom: var(--space-xl);
+}
+
+.stepsTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+}
+
+.step {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    border-color: var(--color-primary);
+    transform: translateX(4px);
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.stepIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--color-surface-elevated);
+  border-radius: 50%;
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+}
+
+.stepContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.stepHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stepType {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-surface-elevated);
+  border-radius: var(--radius-md);
+}
+
+.stepDuration {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.stepRoute {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.stepFrom,
+.stepTo {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.stepArrow {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.stepLine,
+.stepPlatform,
+.stepFare {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.journeyActions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+}
+
+.tipsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.tip {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+}
+
+.tipIcon {
+  font-size: var(--font-size-xl);
+  flex-shrink: 0;
+}
+
+.tipContent {
+  flex: 1;
+}
+
+.tipTitle {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+}
+
+.tipDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: var(--line-height-relaxed);
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .planTrip {
+    padding: var(--space-md);
+  }
+  
+  .title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .subtitle {
+    font-size: var(--font-size-base);
+  }
+  
+  .stationInputs {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .swapButton {
+    align-self: center;
+    transform: rotate(90deg);
+  }
+  
+  .journeySummary {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+  
+  .journeyActions {
+    flex-direction: column;
+  }
+  
+  .step {
+    padding: var(--space-md);
+  }
+  
+  .stepHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+}
+
+@media (max-width: 640px) {
+  .tip {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .stepRoute {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  
+  .stepArrow {
+    transform: rotate(90deg);
+  }
+}

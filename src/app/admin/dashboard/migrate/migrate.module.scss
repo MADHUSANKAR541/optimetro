@@ -1,0 +1,524 @@
+.apiDocsPage {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: calc(100vh - 120px);
+
+  .header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.125rem;
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    height: calc(100% - 120px);
+  }
+
+  // Sidebar Styles
+  .sidebar {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .sidebarHeader {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface-elevated);
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--color-text);
+        margin: 0;
+      }
+    }
+
+    .category {
+      border-bottom: 1px solid var(--color-border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .categoryTitle {
+        padding: 1rem 1.5rem 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin: 0;
+      }
+
+      .endpoints {
+        padding: 0.5rem 0 1rem;
+      }
+
+      .endpointButton {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+
+        &:hover {
+          background: var(--color-surface-elevated);
+        }
+
+        &.active {
+          background: var(--color-primary);
+          color: white;
+
+          .method {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+          }
+
+          .endpointIcon {
+            color: white;
+          }
+        }
+
+        .method {
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 0.25rem 0.5rem;
+          border-radius: var(--radius-sm);
+          background: var(--color-surface-elevated);
+          color: var(--color-text-secondary);
+          min-width: 50px;
+          text-align: center;
+
+          &.get { background: #10b981; color: white; }
+          &.post { background: #3b82f6; color: white; }
+          &.put { background: #f59e0b; color: white; }
+          &.delete { background: #ef4444; color: white; }
+        }
+
+        .endpointName {
+          flex: 1;
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: var(--color-text);
+        }
+
+        .endpointIcon {
+          color: var(--color-text-muted);
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+
+  // Main Content Styles
+  .mainContent {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .endpointCard {
+    margin-bottom: 2rem;
+    
+    .endpointHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+
+      .endpointInfo {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+        min-width: 0;
+
+        .method {
+          font-size: 0.875rem;
+          font-weight: 600;
+          padding: 0.5rem 1rem;
+          border-radius: var(--radius-md);
+          color: white;
+          white-space: nowrap;
+
+          &.get { background: #10b981; }
+          &.post { background: #3b82f6; }
+          &.put { background: #f59e0b; }
+          &.delete { background: #ef4444; }
+        }
+
+        .path {
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          font-size: 1rem;
+          background: var(--color-surface);
+          padding: 0.5rem 1rem;
+          border-radius: var(--radius-md);
+          border: 1px solid var(--color-border);
+          color: var(--color-text);
+          word-break: break-all;
+        }
+      }
+
+      .endpointActions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-shrink: 0;
+        margin-top: 0.5rem;
+
+        .testButton {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          white-space: nowrap;
+          min-height: 40px;
+        }
+      }
+    }
+
+    .endpointTitle {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-text);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .endpointDescription {
+      color: var(--color-text-secondary);
+      margin: 0;
+      line-height: 1.6;
+    }
+  }
+
+  .requestResponseSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+    clear: both;
+  }
+
+  .requestCard,
+  .responseCard,
+  .exampleCard,
+  .parametersCard {
+    .codeBlock {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin: 0;
+      overflow-x: auto;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--color-text);
+
+      code {
+        background: none;
+        padding: 0;
+        border: none;
+        color: inherit;
+      }
+    }
+  }
+
+  // Ensure all buttons are visible
+  button {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  // Specific button visibility fixes
+  .endpointActions button,
+  .responseActions button,
+  .testButton {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    position: relative !important;
+    z-index: 10 !important;
+    background: var(--color-primary) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: var(--radius-md) !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+    transition: all var(--transition-fast) !important;
+    margin-bottom: 0 !important;
+    box-shadow: var(--shadow-sm) !important;
+
+    &:hover {
+      background: var(--color-primary-dark) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: var(--shadow-md) !important;
+    }
+
+    &:disabled {
+      opacity: 0.6 !important;
+      cursor: not-allowed !important;
+    }
+  }
+
+  // Ensure proper spacing between sections
+  .endpointCard + .requestResponseSection {
+    margin-top: 2rem;
+  }
+
+  .parametersCard {
+    .parametersTable {
+      .parameterHeader {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 2fr;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        background: var(--color-surface);
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: 0.5rem;
+      }
+
+      .parameterRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 2fr;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        code {
+          background: var(--color-surface);
+          padding: 0.25rem 0.5rem;
+          border-radius: var(--radius-sm);
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+          font-size: 0.875rem;
+          color: var(--color-primary);
+        }
+
+        .required {
+          color: var(--color-success);
+          font-weight: 600;
+        }
+
+        .optional {
+          color: var(--color-text-muted);
+        }
+      }
+    }
+  }
+
+  .responseCard {
+    .responseHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+
+      .responseActions {
+        display: flex;
+        gap: 0.5rem;
+      }
+    }
+
+    .responseStatus {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .statusCode {
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+
+        &.success {
+          background: var(--color-success);
+          color: white;
+        }
+
+        &.error {
+          background: var(--color-error);
+          color: white;
+        }
+      }
+
+      .statusText {
+        color: var(--color-text-secondary);
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .welcomeCard {
+    .welcomeContent {
+      text-align: center;
+      padding: 3rem 2rem;
+
+      .welcomeIcon {
+        font-size: 4rem;
+        color: var(--color-primary);
+        margin-bottom: 1.5rem;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--color-text);
+        margin-bottom: 1rem;
+      }
+
+      p {
+        color: var(--color-text-secondary);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+
+        .feature {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 1.5rem;
+          background: var(--color-surface);
+          border-radius: var(--radius-lg);
+          border: 1px solid var(--color-border);
+
+          .featureIcon {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+          }
+
+          span {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .apiDocsPage {
+    .layout {
+      grid-template-columns: 300px 1fr;
+      gap: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .apiDocsPage {
+    padding: 1rem;
+    height: auto;
+
+    .header h1 {
+      font-size: 2rem;
+    }
+
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      height: auto;
+    }
+
+    .sidebar {
+      order: 2;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .mainContent {
+      order: 1;
+    }
+
+    .endpointCard {
+      .endpointHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding-bottom: 1.5rem;
+
+        .endpointInfo {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+          width: 100%;
+        }
+
+        .endpointActions {
+          width: 100%;
+          display: flex;
+          justify-content: flex-start;
+          margin-top: 0;
+        }
+      }
+    }
+
+    .parametersCard {
+      .parametersTable {
+        .parameterHeader,
+        .parameterRow {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+      }
+    }
+
+    .welcomeCard {
+      .welcomeContent {
+        padding: 2rem 1rem;
+
+        .features {
+          grid-template-columns: 1fr;
+        }
+      }
+    }
+  }
+}

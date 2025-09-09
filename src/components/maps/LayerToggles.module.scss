@@ -1,0 +1,132 @@
+.layerToggles {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(10px);
+}
+
+.toggleHeader {
+  margin-bottom: var(--space-lg);
+
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.toggleTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: 100%;
+  text-align: left;
+  
+  &:hover {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  &.active {
+    background: rgba(5, 150, 105, 0.1);
+    border-color: var(--color-success);
+    
+    .toggleIcon {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.toggleIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: var(--font-size-lg);
+  transition: transform var(--transition-fast);
+}
+
+.toggleContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.toggleLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.toggleIndicator {
+  display: flex;
+  align-items: center;
+}
+
+.toggleSwitch {
+  position: relative;
+  width: 2.5rem;
+  height: 1.25rem;
+  background: var(--color-border);
+  border-radius: 1rem;
+  transition: background var(--transition-fast);
+  
+  &.on {
+    background: var(--color-success);
+  }
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1rem;
+  height: 1rem;
+  background: white;
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.toggleSwitch.on .toggleThumb {
+  transform: translateX(1.25rem);
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .layerToggles {
+    padding: var(--space-md);
+  }
+  
+  .toggleButton {
+    padding: var(--space-sm) var(--space-md);
+  }
+  
+  .toggleIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: var(--font-size-base);
+  }
+}

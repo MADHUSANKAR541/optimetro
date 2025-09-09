@@ -1,0 +1,127 @@
+.mapContainer {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-xl);
+}
+
+.mapSkeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeletonContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--color-text-secondary);
+}
+
+.skeletonSpinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--color-border);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.skeletonText {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Leaflet overrides for theme consistency
+.mapContainer :global(.leaflet-container) {
+  background: var(--color-surface) !important;
+  font-family: var(--font-family-sans) !important;
+}
+
+.mapContainer :global(.leaflet-popup-content-wrapper) {
+  background: var(--color-surface-elevated) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.mapContainer :global(.leaflet-popup-content) {
+  color: var(--color-text) !important;
+  font-family: var(--font-family-sans) !important;
+}
+
+.mapContainer :global(.leaflet-popup-tip) {
+  background: var(--color-surface-elevated) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+.mapContainer :global(.leaflet-control-zoom) {
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+.mapContainer :global(.leaflet-control-zoom a) {
+  background: var(--color-surface-elevated) !important;
+  color: var(--color-text) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+  
+  &:hover {
+    background: var(--color-surface) !important;
+  }
+}
+
+.mapContainer :global(.leaflet-control-zoom a:last-child) {
+  border-bottom: none !important;
+}
+
+// Marker cluster styling
+.mapContainer :global(.marker-cluster-small) {
+  background-color: rgba(5, 150, 105, 0.2) !important;
+  border: 2px solid var(--color-success) !important;
+}
+
+.mapContainer :global(.marker-cluster-small div) {
+  background-color: var(--color-success) !important;
+  color: white !important;
+}
+
+.mapContainer :global(.marker-cluster-medium) {
+  background-color: rgba(37, 99, 235, 0.2) !important;
+  border: 2px solid var(--color-primary) !important;
+}
+
+.mapContainer :global(.marker-cluster-medium div) {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+.mapContainer :global(.marker-cluster-large) {
+  background-color: rgba(220, 38, 38, 0.2) !important;
+  border: 2px solid var(--color-error) !important;
+}
+
+.mapContainer :global(.marker-cluster-large div) {
+  background-color: var(--color-error) !important;
+  color: white !important;
+}

@@ -1,0 +1,88 @@
+{
+  "id": "DEPOT_001",
+  "name": "Kochi Metro Depot",
+  "bounds": [
+    [9.85, 76.15],
+    [9.95, 76.25]
+  ],
+  "bays": [
+    {
+      "id": "BAY_001",
+      "bayNumber": "Bay 1",
+      "x": 9.88,
+      "y": 76.18,
+      "capacity": 2,
+      "occupied": 1,
+      "trainIds": ["KMRL-001"],
+      "estimatedTurnout": "05:30"
+    },
+    {
+      "id": "BAY_002",
+      "bayNumber": "Bay 2",
+      "x": 9.89,
+      "y": 76.19,
+      "capacity": 2,
+      "occupied": 2,
+      "trainIds": ["KMRL-002", "KMRL-003"],
+      "estimatedTurnout": "05:35"
+    },
+    {
+      "id": "BAY_003",
+      "bayNumber": "Bay 3",
+      "x": 9.90,
+      "y": 76.20,
+      "capacity": 2,
+      "occupied": 1,
+      "trainIds": ["KMRL-004"],
+      "estimatedTurnout": "05:40"
+    },
+    {
+      "id": "BAY_004",
+      "bayNumber": "Bay 4",
+      "x": 9.91,
+      "y": 76.21,
+      "capacity": 2,
+      "occupied": 0,
+      "trainIds": [],
+      "estimatedTurnout": "05:45"
+    },
+    {
+      "id": "BAY_005",
+      "bayNumber": "Bay 5",
+      "x": 9.92,
+      "y": 76.22,
+      "capacity": 2,
+      "occupied": 2,
+      "trainIds": ["KMRL-005", "KMRL-006"],
+      "estimatedTurnout": "05:50"
+    }
+  ],
+  "tracks": [
+    [
+      [9.87, 76.17],
+      [9.88, 76.18],
+      [9.89, 76.19],
+      [9.90, 76.20],
+      [9.91, 76.21],
+      [9.92, 76.22],
+      [9.93, 76.23]
+    ],
+    [
+      [9.87, 76.18],
+      [9.88, 76.19],
+      [9.89, 76.20],
+      [9.90, 76.21],
+      [9.91, 76.22],
+      [9.92, 76.23],
+      [9.93, 76.24]
+    ]
+  ],
+  "entryPoints": [
+    [9.87, 76.17],
+    [9.87, 76.18]
+  ],
+  "exitPoints": [
+    [9.93, 76.23],
+    [9.93, 76.24]
+  ]
+}

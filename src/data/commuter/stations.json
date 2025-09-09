@@ -1,0 +1,134 @@
+[
+  {
+    "id": "ALUVA",
+    "name": "Aluva",
+    "lat": 10.1089,
+    "lng": 76.3515,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "food_court", "atm"],
+    "accessibility": true,
+    "firstTrain": "05:30",
+    "lastTrain": "22:30"
+  },
+  {
+    "id": "EDAPALLY",
+    "name": "Edapally",
+    "lat": 10.0258,
+    "lng": 76.3071,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "shopping"],
+    "accessibility": true,
+    "firstTrain": "05:35",
+    "lastTrain": "22:35"
+  },
+  {
+    "id": "PALARIVATTOM",
+    "name": "Palarivattom",
+    "lat": 10.0069,
+    "lng": 76.2931,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom"],
+    "accessibility": true,
+    "firstTrain": "05:40",
+    "lastTrain": "22:40"
+  },
+  {
+    "id": "JLN_STADIUM",
+    "name": "JLN Stadium",
+    "lat": 9.9881,
+    "lng": 76.2791,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "food_court"],
+    "accessibility": true,
+    "firstTrain": "05:45",
+    "lastTrain": "22:45"
+  },
+  {
+    "id": "KALOOR",
+    "name": "Kaloor",
+    "lat": 9.9692,
+    "lng": 76.2651,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "shopping", "atm"],
+    "accessibility": true,
+    "firstTrain": "05:50",
+    "lastTrain": "22:50"
+  },
+  {
+    "id": "TOWN_HALL",
+    "name": "Town Hall",
+    "lat": 9.9503,
+    "lng": 76.2511,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "food_court"],
+    "accessibility": true,
+    "firstTrain": "05:55",
+    "lastTrain": "22:55"
+  },
+  {
+    "id": "MG_ROAD",
+    "name": "MG Road",
+    "lat": 9.9314,
+    "lng": 76.2371,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "shopping", "atm", "food_court"],
+    "accessibility": true,
+    "firstTrain": "06:00",
+    "lastTrain": "23:00"
+  },
+  {
+    "id": "MAHARAJA_COLLEGE",
+    "name": "Maharaja's College",
+    "lat": 9.9125,
+    "lng": 76.2231,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom"],
+    "accessibility": true,
+    "firstTrain": "06:05",
+    "lastTrain": "23:05"
+  },
+  {
+    "id": "ERNAKULAM_SOUTH",
+    "name": "Ernakulam South",
+    "lat": 9.8936,
+    "lng": 76.2091,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "shopping", "atm"],
+    "accessibility": true,
+    "firstTrain": "06:10",
+    "lastTrain": "23:10"
+  },
+  {
+    "id": "THYKOODAM",
+    "name": "Thykoodam",
+    "lat": 9.8747,
+    "lng": 76.1951,
+    "lineId": "LINE_1",
+    "facilities": ["parking", "restroom", "food_court"],
+    "accessibility": true,
+    "firstTrain": "06:15",
+    "lastTrain": "23:15"
+  },
+  {
+    "id": "VYTILLA",
+    "name": "Vytilla",
+    "lat": 9.8558,
+    "lng": 76.1811,
+    "lineId": "LINE_2",
+    "facilities": ["parking", "restroom", "shopping"],
+    "accessibility": true,
+    "firstTrain": "06:20",
+    "lastTrain": "23:20"
+  },
+  {
+    "id": "SN_JUNCTION",
+    "name": "SN Junction",
+    "lat": 9.8369,
+    "lng": 76.1671,
+    "lineId": "LINE_2",
+    "facilities": ["parking", "restroom", "food_court", "atm"],
+    "accessibility": true,
+    "firstTrain": "06:25",
+    "lastTrain": "23:25"
+  }
+]
