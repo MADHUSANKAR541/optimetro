@@ -3,7 +3,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { DepotSchematic, DepotBay, TrainRake } from '@/lib/types';
-import { MAP_CONFIG } from '@/lib/mapConfig';
 import { FaTrain, FaCog, FaWrench, FaCheckCircle } from 'react-icons/fa';
 import styles from './DepotSchematicOverlay.module.scss';
 
@@ -25,6 +24,57 @@ export function DepotSchematicOverlay({
   const [draggedTrain, setDraggedTrain] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Normalize geographic coordinates (lat/lng) into 0..100 SVG space using depot.bounds
+  const normalizeX = (lon: number) => {
+    const minLon = depot.bounds?.[0]?.[1];
+    const maxLon = depot.bounds?.[1]?.[1];
+    if (typeof minLon !== 'number' || typeof maxLon !== 'number' || maxLon === minLon) return lon;
+    return ((lon - minLon) / (maxLon - minLon)) * 100;
+  };
+
+  const normalizeY = (lat: number) => {
+    const minLat = depot.bounds?.[0]?.[0];
+    const maxLat = depot.bounds?.[1]?.[0];
+    if (typeof minLat !== 'number' || typeof maxLat !== 'number' || maxLat === minLat) return lat;
+    // SVG y increases downward; choose direct mapping for now
+    return ((lat - minLat) / (maxLat - minLat)) * 100;
+  };
+
+  const getBayXY = (bay: DepotBay) => {
+    // Detect if bay.x/bay.y are geographic by comparing to bounds
+    const minLat = depot.bounds?.[0]?.[0];
+    const maxLat = depot.bounds?.[1]?.[0];
+    const minLon = depot.bounds?.[0]?.[1];
+    const maxLon = depot.bounds?.[1]?.[1];
+
+    const looksLikeGeo =
+      typeof minLat === 'number' && typeof maxLat === 'number' &&
+      typeof minLon === 'number' && typeof maxLon === 'number' &&
+      bay.x >= Math.min(minLat, maxLat) && bay.x <= Math.max(minLat, maxLat) &&
+      bay.y >= Math.min(minLon, maxLon) && bay.y <= Math.max(minLon, maxLon);
+
+    if (looksLikeGeo) {
+      return { x: normalizeX(bay.y as unknown as number), y: normalizeY(bay.x as unknown as number) };
+    }
+
+    // Otherwise treat as already-normalized 0..100
+    return { x: bay.x as unknown as number, y: bay.y as unknown as number };
+  };
+
+  const getTrainXY = (train: TrainRake) => {
+    const px = (train.position as any)?.x;
+    const py = (train.position as any)?.y;
+    if (px != null && py != null) {
+      return { x: px, y: py };
+    }
+    const plat = (train.position as any)?.lat;
+    const plng = (train.position as any)?.lng;
+    if (plat != null && plng != null) {
+      return { x: normalizeX(plng), y: normalizeY(plat) };
+    }
+    return { x: undefined as unknown as number, y: undefined as unknown as number };
+  };
 
   const getTrainByBay = (bayId: string) => {
     return trains.find(train => train.position?.bayId === bayId);
@@ -56,9 +106,10 @@ export function DepotSchematicOverlay({
     
     const rect = svgRef.current?.getBoundingClientRect();
     if (rect) {
+      const { x, y } = getTrainXY(train);
       setDragOffset({
-        x: e.clientX - rect.left - (train.position?.x || 0) * 100,
-        y: e.clientY - rect.top - (train.position?.y || 0) * 100
+        x: e.clientX - rect.left - (x || 0) * 100,
+        y: e.clientY - rect.top - (y || 0) * 100
       });
     }
   };
@@ -85,10 +136,12 @@ export function DepotSchematicOverlay({
       const x = (e.clientX - rect.left - dragOffset.x) / 100;
       const y = (e.clientY - rect.top - dragOffset.y) / 100;
       
-      // Find nearest bay
+      // Find nearest bay (compare in normalized coordinates)
       const nearestBay = depot.bays.reduce((closest, bay) => {
-        const distance = Math.sqrt((bay.x - x) ** 2 + (bay.y - y) ** 2);
-        const closestDistance = Math.sqrt((closest.x - x) ** 2 + (closest.y - y) ** 2);
+        const { x: bx, y: by } = getBayXY(bay);
+        const { x: cx, y: cy } = getBayXY(closest);
+        const distance = Math.hypot(bx - x, by - y);
+        const closestDistance = Math.hypot(cx - x, cy - y);
         return distance < closestDistance ? bay : closest;
       });
       
@@ -143,7 +196,7 @@ export function DepotSchematicOverlay({
         {depot.tracks.map((track, index) => (
           <path
             key={`track-${index}`}
-            d={`M ${track.map(([x, y]) => `${x},${y}`).join(' L ')}`}
+            d={`M ${track.map(([lat, lon]) => `${normalizeX(lon)},${normalizeY(lat)}`).join(' L ')}`}
             stroke="#4b5563"
             strokeWidth="0.5"
             fill="none"
@@ -155,8 +208,8 @@ export function DepotSchematicOverlay({
         {depot.entryPoints.map((point, index) => (
           <circle
             key={`entry-${index}`}
-            cx={point[0]}
-            cy={point[1]}
+            cx={normalizeX(point[1])}
+            cy={normalizeY(point[0])}
             r="1"
             fill="#059669"
             className={styles.entryPoint}
@@ -167,8 +220,8 @@ export function DepotSchematicOverlay({
         {depot.exitPoints.map((point, index) => (
           <circle
             key={`exit-${index}`}
-            cx={point[0]}
-            cy={point[1]}
+            cx={normalizeX(point[1])}
+            cy={normalizeY(point[0])}
             r="1"
             fill="#dc2626"
             className={styles.exitPoint}
@@ -180,13 +233,14 @@ export function DepotSchematicOverlay({
           const train = getTrainByBay(bay.id);
           const isOccupied = bay.occupied > 0;
           const isSelected = selectedTrain && train?.id === selectedTrain;
+          const { x: bx, y: by } = getBayXY(bay);
           
           return (
             <g key={bay.id}>
               {/* Bay Outline */}
               <rect
-                x={bay.x - 1}
-                y={bay.y - 1}
+                x={bx - 1}
+                y={by - 1}
                 width="2"
                 height="2"
                 fill="none"
@@ -198,8 +252,8 @@ export function DepotSchematicOverlay({
               
               {/* Bay Label */}
               <text
-                x={bay.x}
-                y={bay.y - 1.5}
+                x={bx}
+                y={by - 1.5}
                 textAnchor="middle"
                 fontSize="0.8"
                 fill="#6b7280"
@@ -210,8 +264,8 @@ export function DepotSchematicOverlay({
               
               {/* Occupancy Indicator */}
               <text
-                x={bay.x}
-                y={bay.y + 1.5}
+                x={bx}
+                y={by + 1.5}
                 textAnchor="middle"
                 fontSize="0.6"
                 fill="#6b7280"
@@ -225,7 +279,8 @@ export function DepotSchematicOverlay({
 
         {/* Trains */}
         {trains.map((train) => {
-          if (!train.position?.x || !train.position?.y) return null;
+          const { x, y } = getTrainXY(train);
+          if (x == null || y == null) return null;
           
           const isDragging = draggedTrain === train.id;
           const isSelected = selectedTrain === train.id;
@@ -241,8 +296,8 @@ export function DepotSchematicOverlay({
             >
               {/* Train Circle */}
               <circle
-                cx={train.position.x}
-                cy={train.position.y}
+                cx={x}
+                cy={y}
                 r="1.2"
                 fill={statusColor}
                 stroke="white"
@@ -255,8 +310,8 @@ export function DepotSchematicOverlay({
               
               {/* Train Icon */}
               <text
-                x={train.position.x}
-                y={train.position.y + 0.3}
+                x={x}
+                y={y + 0.3}
                 textAnchor="middle"
                 fontSize="0.8"
                 fill="white"
@@ -267,8 +322,8 @@ export function DepotSchematicOverlay({
               
               {/* Train Label */}
               <text
-                x={train.position.x}
-                y={train.position.y - 2}
+                x={x}
+                y={y - 2}
                 textAnchor="middle"
                 fontSize="0.6"
                 fill={statusColor}
@@ -280,8 +335,8 @@ export function DepotSchematicOverlay({
               
               {/* Status Badge */}
               <rect
-                x={train.position.x - 0.8}
-                y={train.position.y + 1.5}
+                x={x - 0.8}
+                y={y + 1.5}
                 width="1.6"
                 height="0.6"
                 fill={statusColor}
@@ -289,8 +344,8 @@ export function DepotSchematicOverlay({
                 className={styles.statusBadge}
               />
               <text
-                x={train.position.x}
-                y={train.position.y + 1.8}
+                x={x}
+                y={y + 1.8}
                 textAnchor="middle"
                 fontSize="0.4"
                 fill="white"
