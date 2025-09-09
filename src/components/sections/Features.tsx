@@ -4,45 +4,45 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/components/ui/Card';
 import { 
-  FaBrain, 
-  FaChartLine, 
-  FaMobileAlt, 
-  FaShieldAlt, 
-  FaClock, 
-  FaLeaf 
+  FaUsers, 
+  FaFileDownload, 
+  FaPlug, 
+  FaFlask, 
+  FaEye, 
+  FaRocket 
 } from 'react-icons/fa';
 import styles from './Features.module.scss';
 
 const features = [
   {
-    icon: <FaBrain />,
-    title: 'AI-Powered Optimization',
-    description: 'Advanced algorithms optimize train scheduling, reduce wait times, and maximize efficiency across the metro network.'
+    icon: <FaUsers />,
+    title: 'Commuter-Centric Impact',
+    description: 'Shorter wait times, higher train availability, and a more reliable metro experience for daily passengers.'
   },
   {
-    icon: <FaChartLine />,
-    title: 'Real-Time Analytics',
-    description: 'Comprehensive dashboards provide live insights into system performance, passenger flow, and operational metrics.'
+    icon: <FaFileDownload />,
+    title: 'Governance-Ready Reports',
+    description: 'Download audit-proof PDF and CSV plans with complete traceability for compliance and accountability.'
   },
   {
-    icon: <FaMobileAlt />,
-    title: 'Mobile-First Design',
-    description: 'Seamless experience across all devices with responsive design and progressive web app capabilities.'
+    icon: <FaPlug />,
+    title: 'Seamless Integration',
+    description: 'Works smoothly with existing systems (GTFS, Maximo, telemetry) and scales as the metro network expands'
   },
   {
-    icon: <FaShieldAlt />,
-    title: 'Enterprise Security',
-    description: 'Bank-grade security with role-based access control, encrypted communications, and audit trails.'
+    icon: <FaFlask />,
+    title: 'What-If Simulations',
+    description: 'Test scenarios like bay closures or delayed trains and instantly see the impact on operations and commuter service.'
   },
   {
-    icon: <FaClock />,
-    title: '24/7 Monitoring',
-    description: 'Continuous system monitoring with automated alerts and predictive maintenance capabilities.'
+    icon: <FaEye />,
+    title: 'Explainable AI',
+    description: 'Every decision is transparent, with clear reasons shown for each train\'s induction, stabling, or maintenance choice.'
   },
   {
-    icon: <FaLeaf />,
-    title: 'Eco-Friendly',
-    description: 'Sustainable operations with energy optimization and reduced carbon footprint tracking.'
+    icon: <FaRocket />,
+    title: 'One-Click Planning',
+    description: 'Generate the entire next-day schedule in minutes, replacing hours of manual work with instant, optimized outputs.'
   }
 ];
 
@@ -57,7 +57,7 @@ export function Features() {
           viewport={{ once: true }}
           className={styles.header}
         >
-          <h2 className={styles.title}>Why Choose Kochi Metro?</h2>
+          <h2 className={styles.title}>Why Choose OptiMetro?</h2>
           <p className={styles.subtitle}>
             Experience the future of urban transportation with cutting-edge technology 
             and innovative solutions designed for modern cities.

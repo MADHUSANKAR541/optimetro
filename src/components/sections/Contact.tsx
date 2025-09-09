@@ -125,25 +125,7 @@ export function Contact() {
             </div>
 
             {/* Social Links */}
-            <div className={styles.socialSection}>
-              <h4 className={styles.socialTitle}>Follow Us</h4>
-              <div className={styles.socialLinks}>
-                {socialLinks.map((social, index) => (
-                  <motion.a
-                    key={index}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialLink}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {social.icon}
-                    <span className={styles.socialName}>{social.name}</span>
-                  </motion.a>
-                ))}
-              </div>
-            </div>
+            
           </motion.div>
 
           {/* Contact Form */}
@@ -225,17 +207,6 @@ export function Contact() {
           viewport={{ once: true }}
           className={styles.mapSection}
         >
-          <Card variant="elevated" className={styles.mapCard}>
-            <h3 className={styles.mapTitle}>Find Us</h3>
-            <div className={styles.mapPlaceholder}>
-              <FaMapMarkerAlt className={styles.mapIcon} />
-              <p className={styles.mapText}>Interactive Map Coming Soon</p>
-              <p className={styles.mapAddress}>
-                Kochi Metro Rail Limited<br />
-                Metro Bhavan, Kaloor, Kochi, Kerala 682017
-              </p>
-            </div>
-          </Card>
         </motion.div>
       </div>
     </section>
