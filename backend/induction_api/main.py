@@ -16,7 +16,13 @@ import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
-import uvicorn
+import uvicorn 
+
+# Explainable AI deps
+from models import ExplainDecisionRequest, ExplainDecisionResponse
+from engine import generate_reasons
+from trace_logger import log_trace
+from summarizer import llm_summarize
 
 
 class DemandForecaster:
@@ -553,6 +559,35 @@ async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "models_loaded": len(forecaster.models) > 0}
 
+@app.post("/api/explain", response_model=dict)
+def explain_decision(request: ExplainDecisionRequest):
+    reasons = generate_reasons(
+        train_id=request.train_id,
+        induction_decision=request.induction_decision,
+        stabling_bay=request.stabling_bay,
+        conflicts=request.conflicts,
+        predicted_demand=request.predicted_demand
+    )
+
+    # Generate LLM summary
+    summary = llm_summarize(reasons, request.train_id, request.induction_decision)
+
+    trace = {
+        "trainId": request.train_id,
+        "decision": request.induction_decision,
+        "reasons": reasons,
+        "summary": summary
+    }
+
+    log_trace(trace)
+
+    # Return both reasons and human-readable summary
+    return {
+        "trainId": request.train_id,
+        "decision": request.induction_decision,
+        "reasons": reasons,
+        "summary": summary
+    }
 
 # Training Script
 def main():
