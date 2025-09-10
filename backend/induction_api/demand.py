@@ -501,13 +501,11 @@ async def forecast_demand(request: ForecastRequest):
 async def train_models():
     """Train forecasting models (use this endpoint to train with your datasets)"""
     try:
-        # Load datasets using absolute paths based on this file's directory
-        import os
-        base_dir = os.path.dirname(__file__)
+        # Load datasets (modify paths as needed)
         forecaster.load_datasets(
-            ridership_path=os.path.join(base_dir, "ridership_history.csv"),
-            events_path=os.path.join(base_dir, "events_calendar.csv"),
-            weather_path=os.path.join(base_dir, "weather.csv")
+            ridership_path="ridership_history.csv",
+            events_path="events_calendar.csv",
+            weather_path="weather.csv"
         )
         
         # Train models (stored in memory only)

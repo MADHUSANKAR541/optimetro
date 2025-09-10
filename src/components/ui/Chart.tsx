@@ -24,7 +24,6 @@ interface ChartProps {
   type: 'line' | 'area' | 'bar' | 'pie';
   dataKey: string;
   xAxisKey?: string;
-  yDomain?: any;
   color?: string;
   height?: number;
   className?: string;
@@ -37,7 +36,6 @@ export function Chart({
   type,
   dataKey,
   xAxisKey = 'date',
-  yDomain,
   color = '#2563eb',
   height = 300,
   className = ''
@@ -58,7 +56,6 @@ export function Chart({
             <YAxis 
               stroke="var(--color-text-secondary)"
               fontSize={12}
-              domain={yDomain}
             />
             <Tooltip 
               contentStyle={{
@@ -91,7 +88,6 @@ export function Chart({
             <YAxis 
               stroke="var(--color-text-secondary)"
               fontSize={12}
-              domain={yDomain}
             />
             <Tooltip 
               contentStyle={{
@@ -124,7 +120,6 @@ export function Chart({
             <YAxis 
               stroke="var(--color-text-secondary)"
               fontSize={12}
-              domain={yDomain}
             />
             <Tooltip 
               contentStyle={{
@@ -146,7 +141,7 @@ export function Chart({
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={(entry: any) => `${entry.name} ${(((entry.percent as number) || 0) * 100).toFixed(0)}%`}
+              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               outerRadius={80}
               fill="#8884d8"
               dataKey={dataKey}

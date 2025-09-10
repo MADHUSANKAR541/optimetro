@@ -351,22 +351,6 @@ export default function InductionPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  onClick={async () => {
-                    try {
-                      const res = await fetch('/api/train', { method: 'POST' });
-                      const ok = res.ok;
-                      toast[ok ? 'success' : 'error'](ok ? 'Training started' : 'Failed to start training');
-                    } catch {
-                      toast.error('Failed to start training');
-                    }
-                  }}
-                  icon={<FaClock />}
-                >
-                  Train Models
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
                   onClick={handleExportCSV}
                   icon={<FaDownload />}
                 >

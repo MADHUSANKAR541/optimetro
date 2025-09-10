@@ -1,153 +1,110 @@
-{
-  "KMRL-001": {
-    "fitness_certificates": {
-      "expiry_date": "2025-12-31",
-      "certificate_id": "FIT-101"
+[
+  {
+    "id": "KMRL-001",
+    "trainNumber": "KMRL-001",
+    "status": "revenue",
+    "mileage": 15420,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": true
     },
-    "job_cards": [
-      {"job_id": "JC-1001", "task": "Brake inspection", "status": "done"},
-      {"job_id": "JC-1002", "task": "Engine oil change", "status": "done"}
-    ],
-    "branding_contracts": {
-      "status": "active",
-      "contract_id": "BR-101"
+    "position": {
+      "bayId": "BAY_001",
+      "lat": 9.88,
+      "lng": 76.18
     },
-    "crew": [
-      {"crew_id": "C-101", "role": "Driver", "duty_status": "available"},
-      {"crew_id": "C-102", "role": "Guard", "duty_status": "available"}
-    ],
-    "route_allocation": {
-      "route_id": "R-101",
-      "status": "approved"
-    }
+    "jobCards": 0,
+    "conflicts": 0
   },
-
-  "KMRL-002": {
-    "fitness_certificates": {
-      "expiry_date": "2023-05-01",
-      "certificate_id": "FIT-999"
+  {
+    "id": "KMRL-002",
+    "trainNumber": "KMRL-002",
+    "status": "standby",
+    "mileage": 12850,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": false
     },
-    "job_cards": [
-      {"job_id": "JC-9001", "task": "Wheel alignment", "status": "pending"},
-      {"job_id": "JC-9002", "task": "Brake pad replacement", "status": "done"}
-    ],
-    "branding_contracts": {
-      "status": "inactive",
-      "contract_id": "BR-999"
+    "position": {
+      "bayId": "BAY_002",
+      "lat": 9.89,
+      "lng": 76.19
     },
-    "crew": [
-      {"crew_id": "C-901", "role": "Driver", "duty_status": "on_leave"},
-      {"crew_id": "C-902", "role": "Guard", "duty_status": "available"}
-    ],
-    "route_allocation": {
-      "route_id": "R-999",
-      "status": "conflict"
-    }
+    "jobCards": 1,
+    "conflicts": 1
   },
-
-  "KMRL-003": {
-    "fitness_certificates": {
-      "expiry_date": "2022-11-15",
-      "certificate_id": "FIT-202"
+  {
+    "id": "KMRL-003",
+    "trainNumber": "KMRL-003",
+    "status": "IBL",
+    "mileage": 18920,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": false,
+      "telecom": true
     },
-    "job_cards": [
-      {"job_id": "JC-2021", "task": "Brake check", "status": "done"}
-    ],
-    "branding_contracts": {
-      "status": "active",
-      "contract_id": "BR-202"
+    "position": {
+      "bayId": "BAY_002",
+      "lat": 9.89,
+      "lng": 76.19
     },
-    "crew": [
-      {"crew_id": "C-201", "role": "Driver", "duty_status": "available"}
-    ],
-    "route_allocation": {
-      "route_id": "R-202",
-      "status": "approved"
-    }
+    "jobCards": 2,
+    "conflicts": 1
   },
-
-  "KMRL-006": {
-    "fitness_certificates": {
-      "expiry_date": "2025-05-01",
-      "certificate_id": "FIT-303"
+  {
+    "id": "KMRL-004",
+    "trainNumber": "KMRL-004",
+    "status": "maintenance",
+    "mileage": 22100,
+    "fitness": {
+      "rollingStock": false,
+      "signalling": true,
+      "telecom": true
     },
-    "job_cards": [
-      {"job_id": "JC-3031", "task": "Brake adjustment", "status": "pending"}
-    ],
-    "branding_contracts": {
-      "status": "active",
-      "contract_id": "BR-303"
+    "position": {
+      "bayId": "BAY_003",
+      "lat": 9.90,
+      "lng": 76.20
     },
-    "crew": [
-      {"crew_id": "C-301", "role": "Driver", "duty_status": "available"}
-    ],
-    "route_allocation": {
-      "route_id": "R-303",
-      "status": "approved"
-    }
+    "jobCards": 3,
+    "conflicts": 2
   },
-
-  "KMRL-007": {
-    "fitness_certificates": {
-      "expiry_date": "2026-01-01",
-      "certificate_id": "FIT-404"
+  {
+    "id": "KMRL-005",
+    "trainNumber": "KMRL-005",
+    "status": "revenue",
+    "mileage": 16750,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": true
     },
-    "job_cards": [
-      {"job_id": "JC-4041", "task": "Lubrication", "status": "done"}
-    ],
-    "branding_contracts": {
-      "status": "inactive",
-      "contract_id": "BR-404"
+    "position": {
+      "bayId": "BAY_005",
+      "lat": 9.92,
+      "lng": 76.22
     },
-    "crew": [
-      {"crew_id": "C-401", "role": "Driver", "duty_status": "available"}
-    ],
-    "route_allocation": {
-      "route_id": "R-404",
-      "status": "approved"
-    }
+    "jobCards": 0,
+    "conflicts": 0
   },
-
-  "KMRL-008": {
-    "fitness_certificates": {
-      "expiry_date": "2027-09-15",
-      "certificate_id": "FIT-505"
+  {
+    "id": "KMRL-006",
+    "trainNumber": "KMRL-006",
+    "status": "standby",
+    "mileage": 14230,
+    "fitness": {
+      "rollingStock": true,
+      "signalling": true,
+      "telecom": true
     },
-    "job_cards": [
-      {"job_id": "JC-5051", "task": "Wheel replacement", "status": "done"}
-    ],
-    "branding_contracts": {
-      "status": "active",
-      "contract_id": "BR-505"
+    "position": {
+      "bayId": "BAY_005",
+      "lat": 9.92,
+      "lng": 76.22
     },
-    "crew": [
-      {"crew_id": "C-501", "role": "Driver", "duty_status": "unavailable"},
-      {"crew_id": "C-502", "role": "Guard", "duty_status": "available"}
-    ],
-    "route_allocation": {
-      "route_id": "R-505",
-      "status": "approved"
-    }
-  },
-
-  "KMRL-003": {
-    "fitness_certificates": {
-      "expiry_date": "2028-03-10",
-      "certificate_id": "FIT-606"
-    },
-    "job_cards": [
-      {"job_id": "JC-6061", "task": "Hydraulics check", "status": "done"}
-    ],
-    "branding_contracts": {
-      "status": "active",
-      "contract_id": "BR-606"
-    },
-    "crew": [
-      {"crew_id": "C-601", "role": "Driver", "duty_status": "available"}
-    ],
-    "route_allocation": {
-      "route_id": "R-606",
-      "status": "conflict"
-    }
+    "jobCards": 1,
+    "conflicts": 0
   }
-}
+]

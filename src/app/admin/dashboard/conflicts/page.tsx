@@ -12,8 +12,7 @@ import { MetroLayers } from '@/components/maps/MetroLayers';
 import { AlertsLayer } from '@/components/maps/AlertsLayer';
 import { LayerToggles } from '@/components/maps/LayerToggles';
 import { useMapState } from '@/hooks/useMapState';
-import { useStations, useMetroLines, useAlerts } from '@/hooks/useSupabaseApi';
-import { useConflictsBackend } from '@/hooks/useConflictsBackend';
+import { useStations, useMetroLines, useAlerts, useConflicts } from '@/hooks/useSupabaseApi';
 import { Conflict, Station, MetroLine, MapAlert } from '@/lib/types';
 import { 
   FaExclamationTriangle, 
@@ -28,7 +27,7 @@ import toast from 'react-hot-toast';
 import styles from './conflicts.module.scss';
 
 export default function ConflictsPage() {
-  const { data: conflictsData, loading, updateData } = useConflictsBackend();
+  const { data: conflictsData, loading } = useConflicts();
   const [selectedConflict, setSelectedConflict] = useState<string | null>(null);
   const [showMap, setShowMap] = useState(true);
   const [showLayers, setShowLayers] = useState(false);
@@ -47,26 +46,13 @@ export default function ConflictsPage() {
 
   const handleResolveConflict = async (conflictId: string) => {
     try {
-      const response = await fetch('/api/conflicts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ conflictId, action: 'resolve' })
-      });
-      
-      if (response.ok) {
-        // Update local state to mark conflict as resolved
-        if (conflictsData) {
-          const updatedConflicts = conflictsData.map(conflict => 
-            conflict.id === conflictId 
-              ? { ...conflict, status: 'resolved' as const }
-              : conflict
-          );
-          updateData(updatedConflicts);
-        }
-        toast.success('Conflict resolved successfully!');
-      } else {
-        throw new Error('Failed to resolve conflict');
-      }
+      // Mock resolve conflict
+      setConflicts(prev => prev.map(conflict => 
+        conflict.id === conflictId 
+          ? { ...conflict, status: 'resolved' as const }
+          : conflict
+      ));
+      toast.success('Conflict resolved successfully!');
     } catch (error) {
       toast.error('Failed to resolve conflict');
     }
