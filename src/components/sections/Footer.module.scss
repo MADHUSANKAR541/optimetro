@@ -1,0 +1,101 @@
+.footer {
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-elevated) 100%);
+    border-top: 1px solid var(--color-border-light);
+    padding: var(--space-3xl) 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-xl);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.5fr;
+    gap: var(--space-2xl);
+    align-items: start;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+    }
+}
+
+.brandBlock {}
+
+.brand {
+    font-weight: 700;
+    font-size: var(--font-size-xl);
+    color: var(--color-text);
+    margin: 0 0 var(--space-xs) 0;
+}
+
+.tagline {
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.link {
+    color: var(--color-text);
+    text-decoration: none;
+    opacity: 0.9;
+    transition: color var(--transition-fast), opacity var(--transition-fast);
+
+    &:hover {
+        color: var(--color-primary);
+        opacity: 1;
+    }
+}
+
+.cta {}
+
+.ctaText {
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-sm) 0;
+}
+
+.subscribe {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.input {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.button {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+}
+
+.meta {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border-light);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.dot {
+    opacity: 0.6;
+}

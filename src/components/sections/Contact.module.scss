@@ -1,8 +1,9 @@
 .contact {
-  padding: var(--space-6xl) 0 var(--space-4xl) 0;
+  padding: calc(var(--space-6xl) + var(--space-2xl)) 0 calc(var(--space-4xl) + 3rem) 0;
   background: linear-gradient(135deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%);
   position: relative;
   overflow: hidden;
+  border-top: 1px solid var(--color-border-light);
 
   &::before {
     content: '';
@@ -12,7 +13,7 @@
     right: 0;
     bottom: 0;
     background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(5, 150, 105, 0.05) 0%, transparent 50%);
+      radial-gradient(circle at 20% 80%, rgba(5, 150, 105, 0.05) 0%, transparent 50%);
     pointer-events: none;
   }
 }
@@ -27,6 +28,7 @@
 
 .header {
   text-align: center;
+  margin-top: var(--space-xl);
   margin-bottom: var(--space-4xl);
 }
 
@@ -52,7 +54,7 @@
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4xl);
+  gap: var(--space-3xl);
   margin-bottom: var(--space-4xl);
   align-items: start;
 
@@ -87,7 +89,7 @@
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border-light);
   transition: all var(--transition-fast);
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
@@ -163,7 +165,7 @@
   font-size: var(--font-size-sm);
   font-weight: 500;
   transition: all var(--transition-fast);
-  
+
   &:hover {
     background: var(--color-primary);
     color: white;
@@ -225,13 +227,13 @@
   color: var(--color-text);
   background: var(--color-surface);
   transition: all var(--transition-fast);
-  
+
   &:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
-  
+
   &::placeholder {
     color: var(--color-text-muted);
   }
@@ -301,15 +303,15 @@
   .contact {
     padding: var(--space-5xl) 0 var(--space-3xl) 0;
   }
-  
+
   .container {
     padding: 0 var(--space-lg);
   }
-  
+
   .title {
     font-size: var(--font-size-3xl);
   }
-  
+
   .content {
     gap: var(--space-2xl);
   }
@@ -319,31 +321,31 @@
   .contact {
     padding: var(--space-4xl) 0 var(--space-2xl) 0;
   }
-  
+
   .title {
     font-size: var(--font-size-2xl);
   }
-  
+
   .subtitle {
     font-size: var(--font-size-base);
   }
-  
+
   .infoCard {
     padding: var(--space-md);
   }
-  
+
   .formCard {
     padding: var(--space-lg);
   }
-  
+
   .socialLinks {
     justify-content: center;
   }
-  
+
   .infoGrid {
     gap: var(--space-md);
   }
-  
+
   .mapPlaceholder {
     padding: var(--space-2xl);
   }
@@ -354,7 +356,7 @@
     flex-direction: column;
     align-items: center;
   }
-  
+
   .socialLink {
     width: 100%;
     justify-content: center;

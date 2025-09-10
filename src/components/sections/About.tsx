@@ -32,7 +32,7 @@ export function About() {
           viewport={{ once: true }}
           className={styles.header}
         >
-          <h2 className={styles.title}>About Kochi Metro</h2>
+          <h2 className={styles.title}>About OptiMetro</h2>
           <p className={styles.subtitle}>
             Transforming urban mobility through innovation, technology, and a commitment 
             to sustainable transportation solutions for the people of Kerala.
@@ -80,9 +80,7 @@ export function About() {
               </div>
               <h3 className={styles.cardTitle}>Our Mission</h3>
               <p className={styles.cardDescription}>
-                To provide safe, efficient, and sustainable public transportation that connects 
-                communities, reduces traffic congestion, and contributes to the economic growth 
-                of Kochi and Kerala.
+              To simplify and transform metro operations with explainable AI, enabling smarter decisions, reliable services, and sustainable growth. We aim to bridge the gap between operational efficiency and commuter satisfaction.
               </p>
             </Card>
           </motion.div>
@@ -100,8 +98,7 @@ export function About() {
               </div>
               <h3 className={styles.cardTitle}>Our Vision</h3>
               <p className={styles.cardDescription}>
-                To become India's most technologically advanced and passenger-friendly metro system, 
-                setting new standards for urban transportation and serving as a model for smart cities worldwide.
+              To build the future of urban mobility where every metro system runs seamlessly — optimized, transparent, and eco-friendly — delivering stress-free journeys for millions of commuters every day.
               </p>
             </Card>
           </motion.div>

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { Parallax } from 'react-scroll-parallax';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/Button';
-import { FaTrain, FaMapMarkerAlt, FaCog, FaRocket } from 'react-icons/fa';
-import styles from './Hero.module.scss';
+import React from "react";
+import Link from "next/link";
+import { Parallax } from "react-scroll-parallax";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/Button";
+import { FaTrain, FaMapMarkerAlt, FaCog, FaRocket, FaSignInAlt, FaTicketAlt } from "react-icons/fa";
+import styles from "./Hero.module.scss";
 
 export function Hero() {
   return (
@@ -49,11 +49,9 @@ export function Hero() {
                 <FaTrain className={styles.trainIcon} />
               </div>
               <div className={styles.trainConnector} />
-              <div className={styles.trainCar}>
-              </div>
+              <div className={styles.trainCar}></div>
               <div className={styles.trainConnector} />
-              <div className={styles.trainCar}>
-              </div>
+              <div className={styles.trainCar}></div>
             </div>
           </div>
         </div>
@@ -62,16 +60,16 @@ export function Hero() {
             <div className={styles.track} />
           </div>
           <div className={styles.rightTrainElement2}>
-            <div className={`${styles.trainComposition} ${styles.rightTrainComposition}`}>
+            <div
+              className={`${styles.trainComposition} ${styles.rightTrainComposition}`}
+            >
               <div className={styles.trainCar}>
                 <FaTrain className={styles.trainIcon} />
               </div>
               <div className={styles.trainConnector} />
-              <div className={styles.trainCar}>
-              </div>
+              <div className={styles.trainCar}></div>
               <div className={styles.trainConnector} />
-              <div className={styles.trainCar}>
-              </div>
+              <div className={styles.trainCar}></div>
             </div>
           </div>
         </div>
@@ -86,23 +84,24 @@ export function Hero() {
           className={styles.textContent}
         >
           <h1 className={styles.title}>
-            Smart Transit Management for
+            Smart Train Induction and Scheduling for
             <span className={styles.highlight}> Kochi Metro</span>
           </h1>
           <p className={styles.subtitle}>
-            Experience the future of urban transportation with AI-powered optimization, 
-            real-time monitoring, and seamless commuter services.
+            Smarter operations, happier passengers — smart planning and
+            real-time insights to Kochi Metro, ensuring reliable trains, shorter
+            waits, and seamless journeys every day.
           </p>
-          
+
           <div className={styles.ctaButtons}>
             <Link href="/commuter/dashboard">
-              <Button variant="primary" size="lg" icon={<FaMapMarkerAlt />}>
-                Plan a Trip
+              <Button variant="primary" size="lg" icon={<FaSignInAlt />}>
+                Sign In
               </Button>
             </Link>
-            <Link href="/admin/dashboard/induction">
-              <Button variant="outline" size="lg" icon={<FaCog />}>
-                Admin Console Demo
+            <Link href="/book-tickets">
+              <Button variant="outline" size="lg" icon={<FaTicketAlt />}>
+                Book Tickets
               </Button>
             </Link>
           </div>
