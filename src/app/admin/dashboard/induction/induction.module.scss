@@ -6,6 +6,10 @@
 
 .header {
   margin-bottom: var(--space-2xl);
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background: var(--color-background);
 }
 
 .title {
@@ -79,12 +83,12 @@
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
-  
+
   &:hover {
     border-color: var(--color-primary);
     color: var(--color-text);
   }
-  
+
   &.active {
     background: var(--color-primary);
     border-color: var(--color-primary);
@@ -134,13 +138,13 @@
   border-radius: var(--radius-xl);
   transition: all var(--transition-fast);
   cursor: pointer;
-  
+
   &:hover {
     border-color: var(--color-primary);
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
   }
-  
+
   &.selected {
     border-color: var(--color-primary);
     background: rgba(37, 99, 235, 0.05);
@@ -207,25 +211,25 @@
   font-weight: 600;
   font-size: var(--font-size-sm);
   width: fit-content;
-  
+
   &.revenue {
     background: rgba(16, 185, 129, 0.1);
     color: var(--color-success);
     border: 1px solid rgba(16, 185, 129, 0.2);
   }
-  
+
   &.standby {
     background: rgba(245, 158, 11, 0.1);
     color: var(--color-warning);
     border: 1px solid rgba(245, 158, 11, 0.2);
   }
-  
+
   &.ibl {
     background: rgba(59, 130, 246, 0.1);
     color: var(--color-info);
     border: 1px solid rgba(59, 130, 246, 0.2);
   }
-  
+
   &.default {
     background: rgba(107, 114, 128, 0.1);
     color: var(--color-text-secondary);
@@ -279,11 +283,11 @@
     grid-template-columns: 1fr;
     gap: var(--space-lg);
   }
-  
+
   .controlsCard {
     order: 2;
   }
-  
+
   .resultsCard {
     order: 1;
   }
@@ -293,25 +297,25 @@
   .induction {
     padding: var(--space-md);
   }
-  
+
   .title {
     font-size: var(--font-size-2xl);
   }
-  
+
   .subtitle {
     font-size: var(--font-size-base);
   }
-  
+
   .actions {
     flex-direction: column;
   }
-  
+
   .resultHeader {
     flex-direction: column;
     gap: var(--space-md);
     align-items: flex-start;
   }
-  
+
   .score {
     align-self: flex-end;
   }
@@ -321,11 +325,11 @@
   .constraintChips {
     flex-direction: column;
   }
-  
+
   .constraintChip {
     text-align: center;
   }
-  
+
   .resultItem {
     padding: var(--space-md);
   }
@@ -338,6 +342,7 @@
   height: 100%;
   border-radius: var(--radius-xl);
   overflow: hidden;
+  z-index: 0;
 }
 
 .mapActions {
@@ -354,7 +359,7 @@
   font-size: var(--font-size-sm);
   color: var(--color-text);
   cursor: pointer;
-  
+
   &:focus {
     outline: none;
     border-color: var(--color-primary);

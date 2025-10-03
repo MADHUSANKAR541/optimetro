@@ -524,7 +524,7 @@ export default function InductionPage() {
                           <span className={styles.trainId}>{result.trainId}</span>
                         </div>
                         <div className={styles.score}>
-                          <span className={styles.scoreValue}>{result.score}</span>
+                          <span className={styles.scoreValue}>{Number(result.score).toFixed(2)}</span>
                           <span className={styles.scoreLabel}>Score</span>
                         </div>
                       </div>
