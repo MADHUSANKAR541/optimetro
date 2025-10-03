@@ -5,6 +5,7 @@ export default withAuth(
   function middleware(req) {
     const token = req.nextauth.token;
     const { pathname } = req.nextUrl;
+    const isGuest = req.nextUrl.searchParams.get('guest') === '1';
 
     // Check role-based access only for authenticated users
     if (token) {
@@ -23,24 +24,31 @@ export default withAuth(
       }
     }
 
+    // Allow guest access to dashboards when explicitly requested
+    if (isGuest && (pathname.startsWith('/admin') || pathname.startsWith('/commuter'))) {
+      return NextResponse.next();
+    }
+
     return NextResponse.next();
   },
   {
     callbacks: {
       authorized: ({ token, req }) => {
         const { pathname } = req.nextUrl;
-        
+        const isGuest = req.nextUrl.searchParams.get('guest') === '1';
+
         // Allow access to public routes
-        if (pathname.startsWith('/login') || 
-            pathname.startsWith('/signup') ||
-            pathname.startsWith('/setup') ||
-            pathname.startsWith('/api/auth') ||
-            pathname === '/' ||
-            pathname.startsWith('/about') ||
-            pathname.startsWith('/status')) {
+        if (pathname.startsWith('/login') ||
+          pathname.startsWith('/signup') ||
+          pathname.startsWith('/setup') ||
+          pathname.startsWith('/api/auth') ||
+          pathname === '/' ||
+          pathname.startsWith('/about') ||
+          pathname.startsWith('/status') ||
+          (isGuest && (pathname.startsWith('/admin') || pathname.startsWith('/commuter')))) {
           return true;
         }
-        
+
         // Require authentication for protected routes
         return !!token;
       },
