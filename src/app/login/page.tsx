@@ -37,7 +37,7 @@ export default function LoginPage() {
       } else {
         const session = await getSession();
         if (session?.user.role === 'admin') {
-          router.push('/admin/dashboard/induction');
+          router.push('/admin/dashboard/tomorrows-plan');
         } else {
           router.push('/commuter/dashboard');
         }

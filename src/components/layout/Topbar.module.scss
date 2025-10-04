@@ -7,7 +7,7 @@
   border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 1000;
 }
 
 .left {
@@ -48,7 +48,7 @@
   color: var(--color-text);
   font-size: var(--font-size-sm);
   font-weight: 500;
-  
+
   &:focus {
     outline: none;
   }
@@ -62,7 +62,7 @@
 
 .notificationButton {
   position: relative;
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -125,24 +125,24 @@
   .topbar {
     padding: var(--space-md);
   }
-  
+
   .left {
     gap: var(--space-md);
   }
-  
+
   .title {
     font-size: var(--font-size-xl);
     margin-left: var(--space-lg);
   }
-  
+
   .datePicker {
     padding: var(--space-xs) var(--space-sm);
   }
-  
+
   .userSection {
     padding: var(--space-xs) var(--space-sm);
   }
-  
+
   .userInfo {
     display: none;
   }

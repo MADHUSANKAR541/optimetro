@@ -15,7 +15,7 @@ export default function AdminIndexPage({
     }
   }
   const suffix = params.toString() ? `?${params.toString()}` : '';
-  redirect(`/admin/dashboard/induction${suffix}`);
+  redirect(`/admin/dashboard/tomorrows-plan${suffix}`);
 }
 
 

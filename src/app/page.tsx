@@ -76,9 +76,9 @@ export default function HomePage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16, marginTop: 20, width: '100%' }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center' }}>
-                <a href="/admin?guest=1" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
+                <a href="/admin/dashboard?guest=1" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
                   <Button variant="primary" size="lg" style={{ width: '100%', justifyContent: 'center' }}>
-                    Admin Page
+                    Admin Dashboard
                   </Button>
                 </a>
                 <span style={{ fontSize: 12, color: 'var(--color-text)' }}>
@@ -87,9 +87,9 @@ export default function HomePage() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, textAlign: 'center' }}>
-                <a href="/commuter?guest=1" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
+                <a href="/commuter/dashboard?guest=1" style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
                   <Button variant="outline" size="lg" style={{ width: '100%', justifyContent: 'center' }}>
-                    Commuter’s Page
+                    Commuter Dashboard
                   </Button>
                 </a>
                 <span style={{ fontSize: 12, color: 'var(--color-text)' }}>

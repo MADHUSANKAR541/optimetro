@@ -11,7 +11,7 @@ export default withAuth(
     if (token) {
       // If an authenticated user visits public pages, redirect to their home
       if (pathname === '/' || pathname.startsWith('/login') || pathname.startsWith('/signup')) {
-        const dest = token.role === 'admin' ? '/admin/dashboard/induction' : '/commuter/dashboard';
+        const dest = token.role === 'admin' ? '/admin/dashboard/tomorrows-plan' : '/commuter/dashboard';
         return NextResponse.redirect(new URL(dest, req.url));
       }
 
@@ -20,7 +20,7 @@ export default withAuth(
       }
 
       if (pathname.startsWith('/commuter') && token.role !== 'commuter') {
-        return NextResponse.redirect(new URL('/admin/dashboard/induction', req.url));
+        return NextResponse.redirect(new URL('/admin/dashboard/tomorrows-plan', req.url));
       }
     }
 
@@ -45,6 +45,8 @@ export default withAuth(
           pathname === '/' ||
           pathname.startsWith('/about') ||
           pathname.startsWith('/status') ||
+          pathname === '/admin' ||
+          pathname === '/commuter' ||
           (isGuest && (pathname.startsWith('/admin') || pathname.startsWith('/commuter')))) {
           return true;
         }

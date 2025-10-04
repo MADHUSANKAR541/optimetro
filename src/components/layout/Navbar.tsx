@@ -69,7 +69,7 @@ export function Navbar() {
                   session.user &&
                   "role" in session.user &&
                   session.user.role === "admin"
-                    ? "/admin/dashboard/induction"
+                    ? "/admin/dashboard"
                     : "/commuter/dashboard"
                 }
                 className={styles.navLink}
@@ -167,7 +167,7 @@ export function Navbar() {
                   session.user &&
                   "role" in session.user &&
                   session.user.role === "admin"
-                    ? "/admin/dashboard/induction"
+                    ? "/admin/dashboard"
                     : "/commuter/dashboard"
                 }
                 className={styles.mobileNavLink}
