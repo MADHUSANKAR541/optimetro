@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { AdminLayout } from '@/components/layout/AdminLayout';
 import { Loading } from '@/components/ui/Loading';
@@ -13,20 +13,31 @@ export default function AdminLayoutWrapper({
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (status === 'loading') return;
     
-    if (!session) {
-      router.push('/login');
+    // Allow access to base /admin page without authentication
+    if (pathname === '/admin') {
       return;
     }
     
-    if (session.user.role !== 'admin') {
-      router.push('/commuter/dashboard');
-      return;
+    // For dashboard routes, check for guest access or authentication
+    if (pathname.startsWith('/admin/dashboard')) {
+      const isGuest = typeof window !== 'undefined' && window.location.search.includes('guest=1');
+      
+      if (!session && !isGuest) {
+        router.push('/login');
+        return;
+      }
+      
+      if (session && session.user.role !== 'admin') {
+        router.push('/commuter/dashboard');
+        return;
+      }
     }
-  }, [session, status, router]);
+  }, [session, status, router, pathname]);
 
   if (status === 'loading') {
     return (
@@ -36,9 +47,21 @@ export default function AdminLayoutWrapper({
     );
   }
 
-  if (!session || session.user.role !== 'admin') {
-    return null;
+  // For dashboard routes, check for guest access or authentication and admin role
+  if (pathname.startsWith('/admin/dashboard')) {
+    const isGuest = typeof window !== 'undefined' && window.location.search.includes('guest=1');
+    
+    if (!session && !isGuest) {
+      return null;
+    }
+    
+    if (session && session.user.role !== 'admin') {
+      return null;
+    }
+    
+    return <AdminLayout>{children}</AdminLayout>;
   }
 
-  return <AdminLayout>{children}</AdminLayout>;
+  // For base /admin page, render without layout wrapper
+  return <>{children}</>;
 }

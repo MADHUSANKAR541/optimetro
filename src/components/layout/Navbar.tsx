@@ -51,6 +51,17 @@ export function Navbar() {
             Contact
           </a>
          
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              try {
+                window.dispatchEvent(new Event("open-guest-modal"));
+              } catch {}
+            }}
+          >
+            Guest Access
+          </Button>
           {session ? (
             <div className={styles.userSection}>
               <Link
@@ -58,7 +69,7 @@ export function Navbar() {
                   session.user &&
                   "role" in session.user &&
                   session.user.role === "admin"
-                    ? "/admin/dashboard/induction"
+                    ? "/admin/dashboard"
                     : "/commuter/dashboard"
                 }
                 className={styles.navLink}
@@ -137,6 +148,18 @@ export function Navbar() {
             Status
           </Link>
 
+          <button
+            className={styles.mobileNavLink}
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              try {
+                window.dispatchEvent(new Event("open-guest-modal"));
+              } catch {}
+            }}
+          >
+            Guest login
+          </button>
+
           {session ? (
             <>
               <Link
@@ -144,7 +167,7 @@ export function Navbar() {
                   session.user &&
                   "role" in session.user &&
                   session.user.role === "admin"
-                    ? "/admin/dashboard/induction"
+                    ? "/admin/dashboard"
                     : "/commuter/dashboard"
                 }
                 className={styles.mobileNavLink}

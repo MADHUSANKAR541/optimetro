@@ -18,7 +18,7 @@ export function Footer() {
             <Link href="#about" className={styles.link}>About</Link>
             <Link href="/commuter/dashboard" className={styles.link}>Plan Journey</Link>
             <Link href="/commuter/dashboard/tickets" className={styles.link}>Tickets</Link>
-            <Link href="/admin/dashboard/induction" className={styles.link}>Operations</Link>
+            <Link href="/admin/dashboard/tomorrows-plan" className={styles.link}>Operations</Link>
           </nav>
 
           <div className={styles.cta}>

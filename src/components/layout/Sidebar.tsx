@@ -54,6 +54,7 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
 
   const setSidebarWidthVar = (widthPx: number) => {
     document.documentElement.style.setProperty('--sidebar-width', widthPx + 'px');
@@ -63,7 +64,9 @@ export function Sidebar() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const mobile = window.innerWidth <= 768;
+    const guest = window.location.search.includes('guest=1');
     setIsMobile(mobile);
+    setIsGuest(guest);
     setSidebarWidthVar(mobile ? (isOpen ? 240 : 70) : (isCollapsed ? 80 : 280));
   }, []);
 
@@ -99,7 +102,26 @@ export function Sidebar() {
     }
   }, [pathname]);
 
-  const items = session?.user && 'role' in session.user && session.user.role === 'admin' ? adminItems : commuterItems;
+  // Determine which items to show based on session, guest access, and current path
+  const items = (() => {
+    // If user is on admin routes, show admin items regardless of guest status
+    if (pathname.startsWith('/admin/dashboard')) {
+      return adminItems;
+    }
+    
+    // If user is on commuter routes, show commuter items
+    if (pathname.startsWith('/commuter/dashboard')) {
+      return commuterItems;
+    }
+    
+    // For guest users on other pages, show commuter items by default
+    if (isGuest) {
+      return commuterItems;
+    }
+    
+    // For authenticated users, show items based on role
+    return session?.user && 'role' in session.user && session.user.role === 'admin' ? adminItems : commuterItems;
+  })();
 
   const isCollapsedEffective = isMobile ? !isOpen : isCollapsed;
 
@@ -131,10 +153,12 @@ export function Sidebar() {
         <ul className={styles.navList}>
           {items.map((item) => {
             const isActive = pathname === item.href;
+            // Preserve guest parameter for guest users
+            const href = isGuest ? `${item.href}?guest=1` : item.href;
             return (
               <li key={item.href} className={styles.navItem}>
                 <Link
-                  href={item.href}
+                  href={href}
                   className={`${styles.navLink} ${isActive ? styles.active : ''}`}
                   title={isCollapsedEffective ? item.label : undefined}
                   onClick={() => {
@@ -165,7 +189,18 @@ export function Sidebar() {
               <div className={styles.userDetails}>
                 <div className={styles.userName}>{session?.user?.name}</div>
                 <div className={styles.userRole}>
-                  {session?.user && 'role' in session.user && session.user.role === 'admin' ? 'Administrator' : 'Commuter'}
+                  {(() => {
+                    // If user is on admin routes, show Administrator
+                    if (pathname.startsWith('/admin/dashboard')) {
+                      return 'Administrator';
+                    }
+                    // If user is on commuter routes, show Commuter
+                    if (pathname.startsWith('/commuter/dashboard')) {
+                      return 'Commuter';
+                    }
+                    // For guest users or other cases, determine by session role
+                    return session?.user && 'role' in session.user && session.user.role === 'admin' ? 'Administrator' : 'Commuter';
+                  })()}
                 </div>
               </div>
             </>
